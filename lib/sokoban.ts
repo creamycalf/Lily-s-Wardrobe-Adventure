@@ -282,8 +282,9 @@ function buildCandidateLevel(index: number, seed: number) {
   const boxCount = Math.min(4, 2 + Math.floor(index / 18));
   const targetPushes = 4 + difficultyTier * 2;
   const shuffledFloors = shuffle(floorCells, rng);
+  let fallback: Level | null = null;
 
-  for (let attempt = 0; attempt < 500; attempt += 1) {
+  for (let attempt = 0; attempt < 900; attempt += 1) {
     const goals = sampleDistinct(shuffledFloors, boxCount, rng);
     const goalKeys = new Set(goals.map(pointKey));
     const playerOptions = shuffledFloors.filter((cell) => !goalKeys.has(pointKey(cell)));
@@ -300,16 +301,53 @@ function buildCandidateLevel(index: number, seed: number) {
     const boxes = sampleDistinct(boxPool, boxCount, rng);
 
     const result = solvePushes(rows, player, boxes, goals);
-    if (!result || result.pushes < targetPushes) continue;
+    if (!result) continue;
 
-    return {
+    const candidate = {
       id: index,
-      name: `${LEVEL_NAMES[(index - 1) % LEVEL_NAMES.length]} · ${index}`,
+      name: `${LEVEL_NAMES[(index - 1) % LEVEL_NAMES.length]} ? ${index}`,
       rows: templateRows,
       player,
       boxes,
       goals,
       solutionPushes: result.pushes,
+    } satisfies Level;
+
+    fallback ??= candidate;
+    if (result.pushes >= targetPushes) return candidate;
+  }
+
+  if (fallback) return fallback;
+
+  const floorSet = new Set(floorCells.map(pointKey));
+  for (const boxCell of floorCells) {
+    for (const dir of DIRECTIONS) {
+      const player = { x: boxCell.x - dir.dx, y: boxCell.y - dir.dy };
+      const goal = { x: boxCell.x + dir.dx, y: boxCell.y + dir.dy };
+      if (!floorSet.has(pointKey(player)) || !floorSet.has(pointKey(goal))) continue;
+
+      return {
+        id: index,
+        name: `${LEVEL_NAMES[(index - 1) % LEVEL_NAMES.length]} ? ${index}`,
+        rows: templateRows,
+        player,
+        boxes: [boxCell],
+        goals: [goal],
+        solutionPushes: 1,
+      } satisfies Level;
+    }
+  }
+
+  const [firstFloor, secondFloor, thirdFloor] = floorCells;
+  if (firstFloor && secondFloor && thirdFloor) {
+    return {
+      id: index,
+      name: `${LEVEL_NAMES[(index - 1) % LEVEL_NAMES.length]} ? ${index}`,
+      rows: templateRows,
+      player: firstFloor,
+      boxes: [secondFloor],
+      goals: [thirdFloor],
+      solutionPushes: 1,
     } satisfies Level;
   }
 

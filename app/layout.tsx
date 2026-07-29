@@ -11,18 +11,18 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     metadataBase: base,
     title: "裙装推箱子",
-    description: "50 关商业感推箱子小游戏，带触控操作、换装系统和本地存档。",
+    description: "50 关 2.5D 推箱子小游戏，带换装收集、触控操作和本地存档。",
     icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
     openGraph: {
       title: "裙装推箱子",
-      description: "50 关商业感推箱子小游戏，带触控操作、换装系统和本地存档。",
+      description: "50 关 2.5D 推箱子小游戏，带换装收集、触控操作和本地存档。",
       type: "website",
       locale: "zh_CN",
     },
     twitter: {
       card: "summary_large_image",
       title: "裙装推箱子",
-      description: "50 关商业感推箱子小游戏，带触控操作、换装系统和本地存档。",
+      description: "50 关 2.5D 推箱子小游戏，带换装收集、触控操作和本地存档。",
     },
   };
 }
@@ -34,4 +34,3 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     </html>
   );
 }
-
