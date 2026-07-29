@@ -1,0 +1,5 @@
+node_modules
+.npm-cache
+dist
+dev.log
+public/og.png

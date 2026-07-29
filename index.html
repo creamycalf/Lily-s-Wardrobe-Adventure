@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="更深的理解，更自然的表达，更完整的创造。认识新一代旗舰模型 GPT-5.6。" />
+  <title>GPT-5.6 现已发布</title>
+  <style>
+    :root{--bg:#050609;--fg:#f7f8fb}*{box-sizing:border-box}html{scroll-behavior:smooth;background:var(--bg)}body{margin:0;background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Microsoft YaHei",sans-serif}a{color:inherit;text-decoration:none}
+    .page-shell{--pointer-x:50vw;--pointer-y:25vh;position:relative;min-height:100vh;overflow:hidden;isolation:isolate;background:radial-gradient(circle at 50% -10%,#20283d 0,#0c101a 24%,#06070b 53%,#030407 100%)}
+    .page-shell:before{content:"";position:fixed;inset:0;z-index:-3;background-image:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);background-size:72px 72px;mask-image:linear-gradient(#000,transparent 92%)}
+    .noise{position:fixed;inset:0;z-index:20;pointer-events:none;opacity:.09;background:repeating-radial-gradient(circle at 18% 32%,rgba(255,255,255,.2) 0 .35px,transparent .5px 3px);background-size:7px 9px;mix-blend-mode:soft-light}
+    .aurora{position:absolute;z-index:-2;border-radius:50%;filter:blur(110px);opacity:.42;animation:drift 12s ease-in-out infinite alternate}.aurora-one{width:620px;height:490px;top:470px;left:-210px;background:#537aff}.aurora-two{width:620px;height:480px;top:300px;right:-230px;background:#d978bc;animation-delay:-4s}.pointer-glow{position:fixed;z-index:-1;width:560px;height:560px;left:calc(var(--pointer-x) - 280px);top:calc(var(--pointer-y) - 280px);border-radius:50%;background:rgba(118,151,255,.15);filter:blur(90px);pointer-events:none;transition:left .12s linear,top .12s linear}@keyframes drift{to{transform:translate3d(70px,40px,0) scale(1.1)}}
+    .glass{position:relative;background:linear-gradient(135deg,rgba(255,255,255,.24) 0%,rgba(255,255,255,.09) 30%,rgba(119,148,226,.08) 66%,rgba(255,255,255,.04) 100%);border:1px solid rgba(255,255,255,.31);box-shadow:inset 0 1px 1px rgba(255,255,255,.48),inset 1px 0 0 rgba(255,255,255,.12),inset 0 -1px 1px rgba(117,134,204,.15),0 22px 70px rgba(0,0,0,.38),0 0 0 .5px rgba(151,178,255,.18);backdrop-filter:blur(30px) saturate(175%);-webkit-backdrop-filter:blur(30px) saturate(175%)}
+    .glass:before{content:"";position:absolute;inset:1px;border-radius:inherit;pointer-events:none;background:linear-gradient(120deg,rgba(255,255,255,.22),transparent 26%,transparent 70%,rgba(210,160,215,.1));mask:linear-gradient(#000,transparent 55%);opacity:.75}
+    .nav{width:min(1120px,calc(100% - 36px));height:66px;z-index:10;margin:20px auto 0;padding:0 12px 0 22px;border-radius:23px;display:flex;align-items:center;justify-content:space-between;overflow:hidden}.brand{display:flex;align-items:center;gap:10px;font-weight:650}.brand-mark{display:grid;place-items:center;width:27px;height:27px;border:1px solid rgba(255,255,255,.48);border-radius:50%;font-size:19px}.nav-links{display:flex;gap:34px;color:rgba(255,255,255,.62);font-size:13px}.nav-links a:hover{color:#fff}.nav-cta{padding:12px 18px;border-radius:14px;background:rgba(255,255,255,.94);color:#101217;font-size:12px;font-weight:750;box-shadow:inset 0 1px #fff,0 5px 20px rgba(255,255,255,.12)}
+    .hero{min-height:900px;padding:116px 20px 40px;text-align:center;position:relative}.eyebrow{display:inline-flex;align-items:center;gap:8px;border-radius:99px;padding:9px 14px;font-size:11px;color:rgba(255,255,255,.76);letter-spacing:.08em;overflow:hidden}.status-dot{width:6px;height:6px;border-radius:50%;background:#c4ddff;box-shadow:0 0 15px #8bbcff}.hero h1{margin:28px 0 20px;font-size:clamp(68px,10vw,138px);letter-spacing:-.075em;line-height:.84;font-weight:650}.hero h1 span{display:block}.headline-gradient{padding-bottom:.1em;background:linear-gradient(110deg,#fff 14%,#b3c9ff 43%,#efb1d9 78%,#fff);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 15px 60px rgba(160,180,255,.08)}.hero-copy{margin:0 auto;font-size:clamp(16px,2vw,20px);line-height:1.85;color:rgba(255,255,255,.58)}.hero-actions{margin-top:34px;display:flex;justify-content:center;align-items:center;gap:28px}.primary-button{display:inline-flex;align-items:center;gap:26px;padding:15px 19px 15px 23px;border-radius:99px;background:#f5f7fb;color:#0c0e12;font-size:13px;font-weight:750;box-shadow:0 10px 40px rgba(176,194,255,.18);transition:.25s}.primary-button:hover{transform:translateY(-3px);box-shadow:0 16px 48px rgba(176,194,255,.32)}.text-button{display:inline-flex;gap:12px;color:rgba(255,255,255,.69);font-size:13px}
+    .model-stage{width:min(760px,96vw);height:400px;margin:28px auto 0;position:relative;display:grid;place-items:center;perspective:1000px}.model-orb{width:260px;height:260px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;background:radial-gradient(circle at 31% 18%,rgba(255,255,255,.78),rgba(194,217,255,.32) 16%,rgba(128,151,216,.2) 34%,rgba(44,50,72,.25) 61%,rgba(255,255,255,.08));box-shadow:inset -30px -34px 90px rgba(14,17,31,.72),inset 22px 20px 50px rgba(255,255,255,.3),inset 0 0 18px rgba(213,226,255,.22),0 32px 110px rgba(100,130,230,.4),0 0 0 1px rgba(255,255,255,.36);animation:float 5s ease-in-out infinite}.model-orb:after{content:"";position:absolute;width:160px;height:48px;left:42px;bottom:20px;border-radius:50%;background:rgba(162,107,199,.23);filter:blur(18px);transform:rotate(-18deg)}.orb-shine{position:absolute;width:130px;height:66px;top:18px;left:50px;border-radius:50%;background:rgba(255,255,255,.44);filter:blur(20px);transform:rotate(-20deg)}.model-label,.model-orb strong,.model-note{position:relative;z-index:2}.model-label{margin-bottom:-8px;font-size:12px;letter-spacing:.45em;color:rgba(255,255,255,.68)}.model-orb strong{font-size:78px;line-height:1;letter-spacing:-.08em;font-weight:500}.model-note{margin-top:14px;font-size:7px;letter-spacing:.22em;color:rgba(255,255,255,.52)}@keyframes float{50%{transform:translateY(-12px) rotateX(2deg)}}.orbit{position:absolute;border:1px solid rgba(205,219,255,.19);border-radius:50%;transform:rotateX(68deg)}.orbit-one{width:480px;height:480px;box-shadow:0 0 40px rgba(121,148,230,.06)}.orbit-two{width:630px;height:630px;border-color:rgba(255,255,255,.07)}.float-card{position:absolute;padding:15px 18px;border-radius:17px;text-align:left;min-width:140px;animation:float 6s ease-in-out infinite reverse;overflow:hidden}.float-card span,.float-card strong{display:block;position:relative}.float-card span{font-size:9px;color:rgba(255,255,255,.52);margin-bottom:5px}.float-card strong{font-size:12px}.float-left{left:5%;top:42%}.float-right{right:4%;top:26%;animation-delay:-2s}.scroll-cue{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);font-size:7px;letter-spacing:.28em;color:rgba(255,255,255,.3)}.scroll-cue span{display:block;height:28px;width:1px;background:linear-gradient(#fff,transparent);margin:0 auto 10px}
+    .section-wrap{width:min(1120px,calc(100% - 40px));margin-inline:auto}.statement{padding:170px 0 90px;text-align:center}.section-kicker{color:#9cb4ef;font-size:9px;font-weight:700;letter-spacing:.28em}.statement h2,.final-cta h2{margin:24px 0 32px;font-size:clamp(48px,8vw,92px);line-height:1.02;letter-spacing:-.065em;font-weight:550}.statement h2 span,.final-cta h2 span{color:rgba(255,255,255,.28)}.statement-copy{max-width:540px;margin:auto;color:rgba(255,255,255,.5);font-size:15px;line-height:1.9}
+    .capability-grid{padding:50px 0 130px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.capability-card{min-height:430px;padding:24px;border-radius:30px;overflow:hidden;transition:.35s}.capability-card:hover{transform:translateY(-9px);border-color:rgba(255,255,255,.5);box-shadow:inset 0 1px 1px rgba(255,255,255,.56),0 28px 85px rgba(0,0,0,.45)}.capability-card:after{content:"";position:absolute;inset:auto -20% -38% 8%;height:72%;border-radius:50%;filter:blur(65px);opacity:.34}.capability-card.violet:after{background:#8f79ff}.capability-card.blue:after{background:#5d9cff}.capability-card.rose:after{background:#e582b7}.card-top{position:relative;z-index:2;display:flex;justify-content:space-between;color:rgba(255,255,255,.42);font-size:9px}.card-arrow{display:grid;place-items:center;width:30px;height:30px;border:1px solid rgba(255,255,255,.19);border-radius:50%;background:rgba(255,255,255,.06)}.mini-orb{position:relative;z-index:2;width:104px;height:104px;margin:60px auto 55px;border-radius:50%;background:radial-gradient(circle at 31% 20%,rgba(255,255,255,.78),rgba(183,202,255,.23) 27%,rgba(255,255,255,.03) 68%);box-shadow:inset -14px -13px 34px rgba(0,0,0,.48),inset 10px 8px 24px rgba(255,255,255,.15),0 20px 50px rgba(126,150,232,.34),0 0 0 1px rgba(255,255,255,.22)}.capability-card h3,.capability-card p{position:relative;z-index:2}.capability-card h3{margin:0 0 13px;font-size:24px;letter-spacing:-.04em}.capability-card p{margin:0;color:rgba(255,255,255,.48);font-size:12px;line-height:1.75}
+    .context-section{padding-bottom:140px}.context-card{min-height:530px;border-radius:34px;display:grid;grid-template-columns:1fr 1fr;overflow:hidden}.context-copy{padding:88px 30px 60px 68px}.context-copy h2{margin:24px 0;font-size:clamp(40px,5vw,66px);line-height:1.06;letter-spacing:-.055em;font-weight:520}.context-copy>p:last-child{max-width:420px;color:rgba(255,255,255,.48);line-height:1.85;font-size:13px}.context-visual{min-height:500px;position:relative;display:grid;place-items:center;background:radial-gradient(circle,rgba(130,154,224,.28),transparent 63%)}.context-ring{position:absolute;border:1px solid rgba(255,255,255,.17);border-radius:50%}.ring-a{width:340px;height:340px}.ring-b{width:440px;height:440px;border-style:dashed;animation:spin 24s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.context-core{width:210px;height:210px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 32% 18%,rgba(255,255,255,.51),rgba(97,121,190,.16) 48%,rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.28);box-shadow:inset -18px -20px 52px rgba(15,20,38,.5),inset 12px 10px 32px rgba(255,255,255,.15),0 30px 90px rgba(72,99,180,.38)}.context-core span{font-size:58px;letter-spacing:-.06em}.context-core small{margin-top:8px;font-size:7px;letter-spacing:.26em;color:rgba(255,255,255,.43)}
+    .final-cta{position:relative;padding:180px 0 190px;text-align:center}.cta-glow{position:absolute;width:650px;height:320px;left:50%;bottom:80px;transform:translateX(-50%);border-radius:50%;background:linear-gradient(90deg,#586fc5,#b26c9e);filter:blur(120px);opacity:.31;z-index:-1}.final-cta>p:not(.section-kicker){color:rgba(255,255,255,.5);font-size:14px;margin-bottom:34px}.primary-button.large{padding:17px 21px 17px 25px}.footer{border-top:1px solid rgba(255,255,255,.11);min-height:110px;display:flex;align-items:center;justify-content:space-between;font-size:10px;color:rgba(255,255,255,.39)}.footer .brand{color:rgba(255,255,255,.8);font-size:13px}.footer .brand-mark{width:22px;height:22px;font-size:15px}
+    @media(max-width:780px){.nav{margin-top:10px;height:58px}.nav-links{display:none}.nav-cta{padding:10px 14px}.hero{min-height:850px;padding-top:96px}.hero h1{font-size:clamp(60px,19vw,94px)}.hero-copy br{display:none}.model-stage{height:370px;transform:scale(.88);margin-top:5px}.float-left{left:-5%}.float-right{right:-7%}.statement{padding-top:120px}.capability-grid{grid-template-columns:1fr}.capability-card{min-height:380px}.mini-orb{margin:42px auto}.context-card{grid-template-columns:1fr}.context-copy{padding:58px 28px 10px}.context-visual{min-height:390px;transform:scale(.86)}.footer{padding:30px 0;gap:18px;flex-direction:column;text-align:center}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.pointer-glow{display:none}}
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <div class="aurora aurora-one" aria-hidden="true"></div>
+    <div class="aurora aurora-two" aria-hidden="true"></div>
+    <div class="pointer-glow" aria-hidden="true"></div>
+    <div class="noise" aria-hidden="true"></div>
+
+    <nav class="nav glass" aria-label="主导航">
+      <a class="brand" href="#top" aria-label="OpenAI 首页">
+        <span class="brand-mark" aria-hidden="true">◎</span><span>OpenAI</span>
+      </a>
+      <div class="nav-links">
+        <a href="#intelligence">能力</a><a href="#experience">体验</a><a href="#access">使用方式</a>
+      </div>
+      <a class="nav-cta" href="#access">开始使用 <span aria-hidden="true">↗</span></a>
+    </nav>
+
+    <section class="hero" id="top">
+      <div class="eyebrow glass"><span class="status-dot"></span> 新一代旗舰模型</div>
+      <h1><span>GPT-5.6</span><span class="headline-gradient">现已发布</span></h1>
+      <p class="hero-copy">更深的理解，更自然的表达，更完整的创造。<br />智能不只回答问题，它开始真正理解你的意图。</p>
+      <div class="hero-actions">
+        <a class="primary-button" href="#access">立即体验 <span aria-hidden="true">→</span></a>
+        <a class="text-button" href="#intelligence">探索新能力 <span aria-hidden="true">↓</span></a>
+      </div>
+
+      <div class="model-stage" aria-label="GPT-5.6 模型视觉展示">
+        <div class="orbit orbit-one" aria-hidden="true"></div><div class="orbit orbit-two" aria-hidden="true"></div>
+        <div class="model-orb glass">
+          <div class="orb-shine" aria-hidden="true"></div>
+          <span class="model-label">GPT</span><strong>5.6</strong><span class="model-note">OUR MOST CAPABLE MODEL</span>
+        </div>
+        <div class="float-card float-left glass"><span>推理深度</span><strong>全新提升</strong></div>
+        <div class="float-card float-right glass"><span>多模态理解</span><strong>自然统一</strong></div>
+      </div>
+      <div class="scroll-cue"><span></span> SCROLL TO DISCOVER</div>
+    </section>
+
+    <section class="statement section-wrap" id="intelligence">
+      <p class="section-kicker">INTELLIGENCE, REIMAGINED</p>
+      <h2>不只是更快。<br /><span>是更懂你。</span></h2>
+      <p class="statement-copy">GPT-5.6 将复杂的能力藏在简单的体验之后。你只需要说出想法，剩下的，让它与你一起完成。</p>
+    </section>
+
+    <section class="capability-grid section-wrap" id="experience">
+      <article class="capability-card glass violet">
+        <div class="card-top"><span>01</span><span class="card-arrow">↗</span></div><div class="mini-orb"></div>
+        <h3>思考，更深入</h3><p>面对复杂问题，GPT-5.6 会先理解全局，再拆解细节。更少绕路，更快抵达真正有用的答案。</p>
+      </article>
+      <article class="capability-card glass blue">
+        <div class="card-top"><span>02</span><span class="card-arrow">↗</span></div><div class="mini-orb"></div>
+        <h3>表达，更自然</h3><p>从一句灵感到一份完整方案，它更懂语气、节奏与上下文，让每一次对话都保持连贯。</p>
+      </article>
+      <article class="capability-card glass rose">
+        <div class="card-top"><span>03</span><span class="card-arrow">↗</span></div><div class="mini-orb"></div>
+        <h3>创造，更完整</h3><p>文字、代码与视觉在同一条思路中协同。想法不再停在草稿，而是直接走向可以使用的作品。</p>
+      </article>
+    </section>
+
+    <section class="context-section section-wrap">
+      <div class="context-card glass">
+        <div class="context-copy">
+          <p class="section-kicker">BUILT FOR THE BIG PICTURE</p>
+          <h2>长对话，<br />依然记得每个细节。</h2>
+          <p>更强的上下文理解，让跨文档分析、长期项目与连续创作保持同一条清晰的思路。</p>
+        </div>
+        <div class="context-visual" aria-hidden="true">
+          <div class="context-ring ring-a"></div><div class="context-ring ring-b"></div>
+          <div class="context-core"><span>1M</span><small>CONTEXT</small></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="final-cta section-wrap" id="access">
+      <div class="cta-glow" aria-hidden="true"></div>
+      <p class="section-kicker">THE NEXT CHAPTER STARTS HERE</p>
+      <h2>准备好，<br /><span>和未来聊聊。</span></h2>
+      <p>GPT-5.6 已面向 ChatGPT 用户与 API 开发者开放。</p>
+      <a class="primary-button large" href="#top">开始使用 GPT-5.6 <span aria-hidden="true">↗</span></a>
+    </section>
+
+    <footer class="footer section-wrap">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">◎</span><span>OpenAI</span></div>
+      <p>智能，应当让每个人的想法走得更远。</p><span>© 2026 OpenAI</span>
+    </footer>
+  </main>
+
+  <script>
+    const page = document.querySelector('.page-shell');
+    window.addEventListener('pointermove', (event) => {
+      page.style.setProperty('--pointer-x', event.clientX + 'px');
+      page.style.setProperty('--pointer-y', event.clientY + 'px');
+    }, { passive: true });
+  </script>
+</body>
+</html>
