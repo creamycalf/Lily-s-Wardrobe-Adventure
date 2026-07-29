@@ -31,7 +31,7 @@ const outfits = [
 
 type Outfit = (typeof outfits)[number];
 type Snapshot = GameState & { levelIndex: number; moves: number; pushes: number };
-type SaveData = { levelIndex: number; outfitId: string; unlocked: string[] };
+type SaveData = { levelIndex: number; outfitId: string; unlocked: string[]; completedLevel: number };
 
 const fallbackTemplates = [
   [
@@ -170,20 +170,21 @@ function clampLevel(levelIndex: number) {
 
 function readSave(): SaveData {
   if (typeof window === "undefined") {
-    return { levelIndex: 0, outfitId: outfits[0].id, unlocked: [outfits[0].id] };
+    return { levelIndex: 0, outfitId: outfits[0].id, unlocked: [outfits[0].id], completedLevel: 0 };
   }
 
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return { levelIndex: 0, outfitId: outfits[0].id, unlocked: [outfits[0].id] };
+    if (!raw) return { levelIndex: 0, outfitId: outfits[0].id, unlocked: [outfits[0].id], completedLevel: 0 };
     const parsed = JSON.parse(raw) as Partial<SaveData>;
     return {
       levelIndex: clampLevel(parsed.levelIndex ?? 0),
       outfitId: typeof parsed.outfitId === "string" ? parsed.outfitId : outfits[0].id,
       unlocked: Array.isArray(parsed.unlocked) && parsed.unlocked.length > 0 ? parsed.unlocked : [outfits[0].id],
+      completedLevel: Math.max(0, Math.min(TOTAL_LEVELS, parsed.completedLevel ?? parsed.levelIndex ?? 0)),
     };
   } catch {
-    return { levelIndex: 0, outfitId: outfits[0].id, unlocked: [outfits[0].id] };
+    return { levelIndex: 0, outfitId: outfits[0].id, unlocked: [outfits[0].id], completedLevel: 0 };
   }
 }
 
@@ -258,6 +259,7 @@ export default function DressboxGame() {
   const [currentState, setCurrentState] = useState<Snapshot | null>(null);
   const [history, setHistory] = useState<Snapshot[]>([]);
   const [unlocked, setUnlocked] = useState<string[]>([outfits[0].id]);
+  const [completedLevel, setCompletedLevel] = useState(0);
   const [selectedOutfit, setSelectedOutfit] = useState(outfits[0].id);
   const [toast, setToast] = useState("");
   const [showWardrobe, setShowWardrobe] = useState(true);
@@ -278,13 +280,17 @@ export default function DressboxGame() {
     setLevelIndex(save.levelIndex);
     setSelectedOutfit(save.outfitId);
     setUnlocked(save.unlocked);
+    setCompletedLevel(save.completedLevel);
     setBooted(true);
   }, []);
 
   useEffect(() => {
     if (!booted) return;
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ levelIndex, outfitId: selectedOutfit, unlocked } satisfies SaveData));
-  }, [booted, levelIndex, selectedOutfit, unlocked]);
+    window.localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ levelIndex, outfitId: selectedOutfit, unlocked, completedLevel } satisfies SaveData),
+    );
+  }, [booted, levelIndex, selectedOutfit, unlocked, completedLevel]);
 
   useEffect(() => {
     if (!level) return;
@@ -299,11 +305,11 @@ export default function DressboxGame() {
   }, [toast]);
 
   function unlockForLevel(nextLevelIndex: number) {
-    const eligible = outfits.filter((item) => item.unlockAt <= nextLevelIndex + 1).map((item) => item.id);
+    const eligible = outfits.filter((item) => item.unlockAt <= nextLevelIndex).map((item) => item.id);
     const merged = Array.from(new Set([...unlocked, ...eligible]));
 
     if (merged.length !== unlocked.length) {
-      const newest = outfits.find((item) => !unlocked.includes(item.id) && item.unlockAt <= nextLevelIndex + 1);
+      const newest = outfits.find((item) => !unlocked.includes(item.id) && item.unlockAt <= nextLevelIndex);
       if (newest) setToast(`解锁新裙装：${newest.name}`);
       setUnlocked(merged);
     }
@@ -322,8 +328,10 @@ export default function DressboxGame() {
     setHistory((items) => [...items, currentState]);
 
     if (isSolved(level, snapshot.boxes)) {
-      setToast("通关了，衣橱里又多了一件新裙子。");
-      unlockForLevel(levelIndex);
+      const cleared = Math.max(completedLevel, levelIndex + 1);
+      setCompletedLevel(cleared);
+      setToast(levelIndex >= TOTAL_LEVELS - 1 ? "全部通关，王冠终章裙已经属于你。" : "通关了，可以进入下一关。");
+      unlockForLevel(cleared);
     }
   }
 
@@ -386,7 +394,7 @@ export default function DressboxGame() {
 
   const cells = useMemo(() => (currentState ? stateToCells(level, currentState) : []), [currentState, level]);
   const solved = currentState ? isSolved(level, currentState.boxes) : false;
-  const completion = Math.round((Math.min(levelIndex + (solved ? 1 : 0), TOTAL_LEVELS) / TOTAL_LEVELS) * 100);
+  const completion = Math.round((Math.min(Math.max(completedLevel, levelIndex + (solved ? 1 : 0)), TOTAL_LEVELS) / TOTAL_LEVELS) * 100);
   const unlockedCount = unlocked.length;
   const currentTheme = outfits.find((item) => item.id === selectedOutfit) ?? outfits[0];
   const currentChapter = `第 ${levelIndex + 1} 关 / ${TOTAL_LEVELS} 关`;
@@ -549,6 +557,30 @@ export default function DressboxGame() {
                 </button>
               );
             })}
+          </div>
+
+          <div className="level-map">
+            <div className="level-map-head">
+              <strong>关卡地图</strong>
+              <span>{completedLevel}/{TOTAL_LEVELS}</span>
+            </div>
+            <div className="level-dots" aria-label="50 关关卡地图">
+              {levels.map((item, index) => {
+                const active = index === levelIndex;
+                const cleared = index < completedLevel;
+                return (
+                  <button
+                    type="button"
+                    key={item.id}
+                    className={`level-dot ${active ? "active" : ""} ${cleared ? "cleared" : ""}`}
+                    onClick={() => goToLevel(index)}
+                    aria-label={`进入第 ${index + 1} 关`}
+                  >
+                    {index + 1}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </aside>
       </section>

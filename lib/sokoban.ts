@@ -10,356 +10,204 @@ export type Level = {
   solutionPushes: number;
 };
 
-type State = {
+const CHAPTER_NAMES = [
+  "玫瑰门厅",
+  "缎带长廊",
+  "月光衣帽间",
+  "花园工坊",
+  "珍珠画室",
+  "星灯侧厅",
+  "蓝宝石书房",
+  "莓果茶室",
+  "琥珀露台",
+  "王冠终章",
+];
+
+type Blueprint = {
+  width: number;
+  height: number;
   player: Point;
-  boxes: string;
+  boxes: Point[];
+  goals: Point[];
+  obstacles?: Point[];
+  solutionPushes: number;
 };
 
-type Template = {
-  name: string;
-  rows: string[];
-};
-
-const DIRECTIONS = [
-  { dx: 1, dy: 0 },
-  { dx: -1, dy: 0 },
-  { dx: 0, dy: 1 },
-  { dx: 0, dy: -1 },
-] as const;
-
-const LEVEL_NAMES = [
-  "丝带序章",
-  "梳妆侧厅",
-  "花架回廊",
-  "月光小屋",
-  "缎面书房",
-  "珍珠花园",
-  "星灯走廊",
-  "玫瑰工坊",
-  "雪糖庭院",
-  "王冠夹层",
-];
-
-const TEMPLATES: Template[] = [
+const BLUEPRINTS: Blueprint[] = [
   {
-    name: "atelier",
-    rows: [
-      "#########",
-      "#.......#",
-      "#..#....#",
-      "#..#..#.#",
-      "#.......#",
-      "#..###..#",
-      "#...#...#",
-      "#.......#",
-      "#########",
+    width: 9,
+    height: 9,
+    player: { x: 2, y: 4 },
+    boxes: [
+      { x: 3, y: 3 },
+      { x: 3, y: 5 },
     ],
+    goals: [
+      { x: 6, y: 3 },
+      { x: 6, y: 5 },
+    ],
+    obstacles: [
+      { x: 4, y: 1 },
+      { x: 4, y: 7 },
+    ],
+    solutionPushes: 6,
   },
   {
-    name: "gallery",
-    rows: [
-      "##########",
-      "#........#",
-      "#.####...#",
-      "#....#...#",
-      "#....#...#",
-      "#...###..#",
-      "#........#",
-      "#..####..#",
-      "#........#",
-      "##########",
+    width: 10,
+    height: 9,
+    player: { x: 2, y: 4 },
+    boxes: [
+      { x: 3, y: 2 },
+      { x: 3, y: 4 },
+      { x: 3, y: 6 },
     ],
+    goals: [
+      { x: 7, y: 2 },
+      { x: 7, y: 4 },
+      { x: 7, y: 6 },
+    ],
+    obstacles: [
+      { x: 5, y: 1 },
+      { x: 5, y: 7 },
+      { x: 8, y: 4 },
+    ],
+    solutionPushes: 12,
   },
   {
-    name: "courtyard",
-    rows: [
-      "#########",
-      "#.......#",
-      "#.###...#",
-      "#...#...#",
-      "#...#...#",
-      "#...###.#",
-      "#.......#",
-      "#..#....#",
-      "#########",
+    width: 10,
+    height: 10,
+    player: { x: 2, y: 5 },
+    boxes: [
+      { x: 4, y: 3 },
+      { x: 4, y: 5 },
+      { x: 4, y: 7 },
     ],
+    goals: [
+      { x: 7, y: 3 },
+      { x: 7, y: 5 },
+      { x: 7, y: 7 },
+    ],
+    obstacles: [
+      { x: 2, y: 2 },
+      { x: 2, y: 7 },
+      { x: 6, y: 1 },
+      { x: 6, y: 8 },
+    ],
+    solutionPushes: 9,
   },
   {
-    name: "hall",
-    rows: [
-      "##########",
-      "#........#",
-      "#..##.#..#",
-      "#..##.#..#",
-      "#........#",
-      "#..####..#",
-      "#........#",
-      "#..#..#..#",
-      "#........#",
-      "##########",
+    width: 11,
+    height: 9,
+    player: { x: 2, y: 4 },
+    boxes: [
+      { x: 4, y: 2 },
+      { x: 4, y: 4 },
+      { x: 4, y: 6 },
+      { x: 6, y: 4 },
     ],
+    goals: [
+      { x: 8, y: 2 },
+      { x: 8, y: 4 },
+      { x: 8, y: 6 },
+      { x: 7, y: 4 },
+    ],
+    obstacles: [
+      { x: 3, y: 1 },
+      { x: 3, y: 7 },
+      { x: 6, y: 1 },
+      { x: 6, y: 7 },
+    ],
+    solutionPushes: 13,
   },
   {
-    name: "loop",
-    rows: [
-      "#########",
-      "#.......#",
-      "#.#####.#",
-      "#.#...#.#",
-      "#.#...#.#",
-      "#.#...#.#",
-      "#.#####.#",
-      "#.......#",
-      "#########",
+    width: 9,
+    height: 10,
+    player: { x: 2, y: 2 },
+    boxes: [
+      { x: 3, y: 3 },
+      { x: 3, y: 5 },
+      { x: 3, y: 7 },
     ],
-  },
-  {
-    name: "parlor",
-    rows: [
-      "##########",
-      "#....#...#",
-      "#....#...#",
-      "#........#",
-      "#.##.##..#",
-      "#........#",
-      "#...#....#",
-      "#...#....#",
-      "#........#",
-      "##########",
+    goals: [
+      { x: 6, y: 3 },
+      { x: 6, y: 5 },
+      { x: 6, y: 7 },
     ],
+    obstacles: [
+      { x: 1, y: 6 },
+      { x: 7, y: 2 },
+      { x: 5, y: 8 },
+    ],
+    solutionPushes: 9,
   },
 ];
-
-function mulberry32(seed: number) {
-  let t = seed >>> 0;
-  return () => {
-    t += 0x6d2b79f5;
-    let r = Math.imul(t ^ (t >>> 15), 1 | t);
-    r ^= r + Math.imul(r ^ (r >>> 7), 61 | r);
-    return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-function randInt(rng: () => number, max: number) {
-  return Math.floor(rng() * max);
-}
-
-function shuffle<T>(items: T[], rng: () => number) {
-  const copy = items.slice();
-  for (let i = copy.length - 1; i > 0; i -= 1) {
-    const j = randInt(rng, i + 1);
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-  return copy;
-}
 
 function pointKey(point: Point) {
   return `${point.x},${point.y}`;
 }
 
-function parseTemplate(template: Template) {
-  const rows = template.rows.map((row) => row.split(""));
-  const height = rows.length;
-  const width = rows[0]?.length ?? 0;
-  const floorCells: Point[] = [];
-  for (let y = 0; y < height; y += 1) {
-    for (let x = 0; x < width; x += 1) {
-      if (rows[y][x] !== "#") floorCells.push({ x, y });
-    }
-  }
-  return { rows, width, height, floorCells };
+function mirrorPoint(point: Point, width: number): Point {
+  return { x: width - 1 - point.x, y: point.y };
 }
 
-function mirrorRows(rows: string[]) {
-  return rows.map((row) => row.split("").reverse().join(""));
+function clonePoint(point: Point): Point {
+  return { x: point.x, y: point.y };
 }
 
-function buildTemplate(seed: number) {
-  const template = TEMPLATES[seed % TEMPLATES.length];
-  const mirrored = seed % 2 === 0 ? template.rows : mirrorRows(template.rows);
-  return { name: template.name, rows: mirrored };
-}
-
-function deadCorner(rows: string[][], point: Point) {
-  const up = rows[point.y - 1]?.[point.x] === "#";
-  const down = rows[point.y + 1]?.[point.x] === "#";
-  const left = rows[point.y]?.[point.x - 1] === "#";
-  const right = rows[point.y]?.[point.x + 1] === "#";
-  return (up || down) && (left || right);
-}
-
-function stateKey(player: Point, boxes: Set<string>) {
-  return `${player.x},${player.y}|${Array.from(boxes).sort().join(";")}`;
-}
-
-function normalizePlayer(player: Point, boxes: Set<string>, rows: string[][]) {
-  const queue: Point[] = [player];
-  const visited = new Set<string>([pointKey(player)]);
-  let best = player;
-
-  while (queue.length > 0) {
-    const current = queue.shift()!;
-    if (current.y < best.y || (current.y === best.y && current.x < best.x)) {
-      best = current;
-    }
-
-    for (const dir of DIRECTIONS) {
-      const next = { x: current.x + dir.dx, y: current.y + dir.dy };
-      const row = rows[next.y];
-      if (!row) continue;
-      if (row[next.x] === "#") continue;
-      if (boxes.has(pointKey(next))) continue;
-      const key = pointKey(next);
-      if (!visited.has(key)) {
-        visited.add(key);
-        queue.push(next);
-      }
-    }
-  }
-
-  return { best, reachable: visited };
-}
-
-function solvePushes(rows: string[][], player: Point, boxes: Point[], goals: Point[]) {
-  const goalSet = new Set(goals.map(pointKey));
-  const startBoxes = new Set(boxes.map(pointKey));
-  const start = { player, boxes: startBoxes };
-  const queue: Array<{ player: Point; boxes: Set<string>; pushes: number }> = [{ ...start, pushes: 0 }];
-  const seen = new Set<string>();
-
-  while (queue.length > 0) {
-    const current = queue.shift()!;
-    const normalized = normalizePlayer(current.player, current.boxes, rows);
-    const canonicalPlayer = normalized.best;
-    const key = stateKey(canonicalPlayer, current.boxes);
-    if (seen.has(key)) continue;
-    seen.add(key);
-
-    let solved = true;
-    for (const box of current.boxes) {
-      if (!goalSet.has(box)) {
-        solved = false;
-        break;
-      }
-    }
-    if (solved) {
-      return { pushes: current.pushes };
-    }
-
-    const reachable = normalized.reachable;
-    for (const cellKey of reachable) {
-      const [sx, sy] = cellKey.split(",").map(Number);
-      for (const dir of DIRECTIONS) {
-        const boxPos = { x: sx + dir.dx, y: sy + dir.dy };
-        const boxKey = pointKey(boxPos);
-        if (!current.boxes.has(boxKey)) continue;
-        const landing = { x: boxPos.x + dir.dx, y: boxPos.y + dir.dy };
-        const landingRow = rows[landing.y];
-        if (!landingRow) continue;
-        if (landingRow[landing.x] === "#") continue;
-        if (current.boxes.has(pointKey(landing))) continue;
-
-        const nextBoxes = new Set(current.boxes);
-        nextBoxes.delete(boxKey);
-        nextBoxes.add(pointKey(landing));
-        queue.push({ player: boxPos, boxes: nextBoxes, pushes: current.pushes + 1 });
-      }
-    }
-  }
-
-  return null;
-}
-
-function sampleDistinct<T>(items: T[], count: number, rng: () => number) {
-  return shuffle(items, rng).slice(0, count);
-}
-
-function buildCandidateLevel(index: number, seed: number) {
-  const rng = mulberry32(seed);
-  const { rows: templateRows } = buildTemplate(seed);
-  const { rows, floorCells } = parseTemplate({ name: "candidate", rows: templateRows });
-  const difficultyTier = Math.floor((index - 1) / 10);
-  const boxCount = Math.min(4, 2 + Math.floor(index / 18));
-  const targetPushes = 4 + difficultyTier * 2;
-  const shuffledFloors = shuffle(floorCells, rng);
-  let fallback: Level | null = null;
-
-  for (let attempt = 0; attempt < 900; attempt += 1) {
-    const goals = sampleDistinct(shuffledFloors, boxCount, rng);
-    const goalKeys = new Set(goals.map(pointKey));
-    const playerOptions = shuffledFloors.filter((cell) => !goalKeys.has(pointKey(cell)));
-    if (playerOptions.length === 0) continue;
-    const player = playerOptions[randInt(rng, playerOptions.length)];
-
-    const boxPool = shuffledFloors.filter(
-      (cell) =>
-        !goalKeys.has(pointKey(cell)) &&
-        pointKey(cell) !== pointKey(player) &&
-        !deadCorner(rows, cell),
-    );
-    if (boxPool.length < boxCount) continue;
-    const boxes = sampleDistinct(boxPool, boxCount, rng);
-
-    const result = solvePushes(rows, player, boxes, goals);
-    if (!result) continue;
-
-    const candidate = {
-      id: index,
-      name: `${LEVEL_NAMES[(index - 1) % LEVEL_NAMES.length]} ? ${index}`,
-      rows: templateRows,
-      player,
-      boxes,
-      goals,
-      solutionPushes: result.pushes,
-    } satisfies Level;
-
-    fallback ??= candidate;
-    if (result.pushes >= targetPushes) return candidate;
-  }
-
-  if (fallback) return fallback;
-
-  const floorSet = new Set(floorCells.map(pointKey));
-  for (const boxCell of floorCells) {
-    for (const dir of DIRECTIONS) {
-      const player = { x: boxCell.x - dir.dx, y: boxCell.y - dir.dy };
-      const goal = { x: boxCell.x + dir.dx, y: boxCell.y + dir.dy };
-      if (!floorSet.has(pointKey(player)) || !floorSet.has(pointKey(goal))) continue;
-
-      return {
-        id: index,
-        name: `${LEVEL_NAMES[(index - 1) % LEVEL_NAMES.length]} ? ${index}`,
-        rows: templateRows,
-        player,
-        boxes: [boxCell],
-        goals: [goal],
-        solutionPushes: 1,
-      } satisfies Level;
-    }
-  }
-
-  const [firstFloor, secondFloor, thirdFloor] = floorCells;
-  if (firstFloor && secondFloor && thirdFloor) {
+function rotateBlueprint(source: Blueprint, index: number): Blueprint {
+  if (index % 2 === 0) {
     return {
-      id: index,
-      name: `${LEVEL_NAMES[(index - 1) % LEVEL_NAMES.length]} ? ${index}`,
-      rows: templateRows,
-      player: firstFloor,
-      boxes: [secondFloor],
-      goals: [thirdFloor],
-      solutionPushes: 1,
-    } satisfies Level;
+      ...source,
+      player: clonePoint(source.player),
+      boxes: source.boxes.map(clonePoint),
+      goals: source.goals.map(clonePoint),
+      obstacles: source.obstacles?.map(clonePoint),
+    };
   }
 
-  throw new Error(`Could not generate level ${index}`);
+  return {
+    ...source,
+    player: mirrorPoint(source.player, source.width),
+    boxes: source.boxes.map((point) => mirrorPoint(point, source.width)),
+    goals: source.goals.map((point) => mirrorPoint(point, source.width)),
+    obstacles: source.obstacles?.map((point) => mirrorPoint(point, source.width)),
+  };
+}
+
+function blueprintRows(blueprint: Blueprint) {
+  const obstacleSet = new Set((blueprint.obstacles ?? []).map(pointKey));
+  const rows: string[] = [];
+
+  for (let y = 0; y < blueprint.height; y += 1) {
+    let row = "";
+    for (let x = 0; x < blueprint.width; x += 1) {
+      const border = x === 0 || y === 0 || x === blueprint.width - 1 || y === blueprint.height - 1;
+      row += border || obstacleSet.has(`${x},${y}`) ? "#" : ".";
+    }
+    rows.push(row);
+  }
+
+  return rows;
+}
+
+function makeLevel(index: number): Level {
+  const blueprint = rotateBlueprint(BLUEPRINTS[(index - 1) % BLUEPRINTS.length], index);
+  const chapter = CHAPTER_NAMES[Math.floor((index - 1) / 5) % CHAPTER_NAMES.length];
+  const variant = ((index - 1) % 5) + 1;
+
+  return {
+    id: index,
+    name: `${chapter} · ${variant}`,
+    rows: blueprintRows(blueprint),
+    player: clonePoint(blueprint.player),
+    boxes: blueprint.boxes.map(clonePoint),
+    goals: blueprint.goals.map(clonePoint),
+    solutionPushes: blueprint.solutionPushes,
+  };
 }
 
 export function generateLevels(count = 50) {
-  const levels: Level[] = [];
-  for (let i = 1; i <= count; i += 1) {
-    levels.push(buildCandidateLevel(i, 8731 + i * 97));
-  }
-  return levels;
+  return Array.from({ length: count }, (_, index) => makeLevel(index + 1));
 }
 
 export function isSolved(level: Level, boxes: Set<string>) {
@@ -434,4 +282,3 @@ export function stateToCells(level: Level, state: GameState) {
 export function formatProgress(levelIndex: number, total: number) {
   return `${Math.min(levelIndex, total)}/${total}`;
 }
-

@@ -805,6 +805,60 @@ button {
   gap: 10px;
 }
 
+.level-map {
+  margin-top: 16px;
+  padding: 14px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.level-map-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.level-map-head strong {
+  font-size: 15px;
+}
+
+.level-map-head span {
+  color: rgba(255, 255, 255, 0.64);
+  font-size: 12px;
+}
+
+.level-dots {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.level-dot {
+  min-height: 34px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.level-dot.cleared {
+  color: #ffffff;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.05)),
+    color-mix(in srgb, var(--theme) 28%, transparent);
+}
+
+.level-dot.active {
+  border-color: color-mix(in srgb, var(--theme) 82%, white 18%);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--theme) 38%, transparent);
+  transform: translateY(-1px);
+}
+
 .wardrobe-card {
   width: 100%;
   display: grid;
