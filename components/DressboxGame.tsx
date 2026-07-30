@@ -200,7 +200,7 @@ function cellClass(cell: { isWall: boolean; isGoal: boolean; isBox: boolean; isP
     .join(" ");
 }
 
-function OutfitSprite({ outfit, large = false }: { outfit: Outfit; large?: boolean }) {
+function OutfitSprite({ outfit, large = false, direction = "down" }: { outfit: Outfit; large?: boolean; direction?: "up" | "down" | "left" | "right" }) {
   const style = {
     "--dress": outfit.dress,
     "--dress-dark": outfit.dressDark,
@@ -211,7 +211,7 @@ function OutfitSprite({ outfit, large = false }: { outfit: Outfit; large?: boole
   } as CSSProperties;
 
   return (
-    <div className={`sprite ${large ? "sprite-large" : ""}`} style={style}>
+    <div className={`sprite dir-${direction} ${large ? "sprite-large" : ""}`} style={style}>
       <span className="sprite-glow" />
       <span className="sprite-hair back" />
       <span className="sprite-head" />
@@ -238,16 +238,18 @@ function OutfitSprite({ outfit, large = false }: { outfit: Outfit; large?: boole
 function BoardCell({
   cell,
   outfit,
+  direction,
 }: {
   cell: { isWall: boolean; isGoal: boolean; isBox: boolean; isPlayer: boolean };
   outfit: Outfit;
+  direction: "up" | "down" | "left" | "right";
 }) {
   return (
     <div className={cellClass(cell)}>
       {!cell.isWall ? <div className="tile-floor" /> : null}
       {!cell.isWall && cell.isGoal ? <span className="tile-goal" aria-hidden="true" /> : null}
       {cell.isBox ? <span className="crate" aria-hidden="true" /> : null}
-      {cell.isPlayer ? <OutfitSprite outfit={outfit} /> : null}
+      {cell.isPlayer ? <OutfitSprite outfit={outfit} direction={direction} /> : null}
     </div>
   );
 }
@@ -264,6 +266,7 @@ export default function DressboxGame() {
   const [toast, setToast] = useState("");
   const [showWardrobe, setShowWardrobe] = useState(true);
   const [pointer, setPointer] = useState({ x: 0.5, y: 0.22 });
+  const [direction, setDirection] = useState<"up" | "down" | "left" | "right">("right");
   const boardRef = useRef<HTMLDivElement>(null);
   const gestureRef = useRef<{ x: number; y: number; active: boolean } | null>(null);
 
@@ -323,6 +326,7 @@ export default function DressboxGame() {
     if (!currentState) return;
     const next = moveState(level, currentState, dx, dy);
     if (!next) return;
+    setDirection(dx < 0 ? "left" : dx > 0 ? "right" : dy < 0 ? "up" : "down");
     const snapshot: Snapshot = { ...next, levelIndex, moves: next.moves, pushes: next.pushes };
     setCurrentState(snapshot);
     setHistory((items) => [...items, currentState]);
@@ -486,7 +490,7 @@ export default function DressboxGame() {
             }}
           >
             <div className="board-grid" style={{ gridTemplateColumns: `repeat(${level.rows[0]?.length ?? 0}, minmax(0, 1fr))` }}>
-              {cells.map((row) => row.map((cell) => <BoardCell key={`${cell.x}-${cell.y}`} cell={cell} outfit={currentTheme} />))}
+              {cells.map((row) => row.map((cell) => <BoardCell key={`${cell.x}-${cell.y}`} cell={cell} outfit={currentTheme} direction={direction} />))}
             </div>
 
             <div className={`win-banner ${solved ? "show" : ""}`}>

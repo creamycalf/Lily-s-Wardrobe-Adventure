@@ -23,10 +23,9 @@ body {
   margin: 0;
   min-height: 100vh;
   background:
-    radial-gradient(circle at 20% 12%, rgba(245, 172, 199, 0.2), transparent 24%),
-    radial-gradient(circle at 84% 10%, rgba(130, 178, 255, 0.18), transparent 22%),
-    radial-gradient(circle at 50% 80%, rgba(104, 209, 181, 0.12), transparent 26%),
-    linear-gradient(180deg, #071017 0%, #0a1320 34%, #060b12 100%);
+    linear-gradient(rgba(26, 10, 13, 0.5), rgba(16, 8, 9, 0.66)),
+    url("/game-scene-2p5d.png") center / cover fixed,
+    linear-gradient(180deg, #2f1712 0%, #130c0a 100%);
   color: var(--fg);
   font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
 }
@@ -49,7 +48,7 @@ button {
   min-height: 100vh;
   position: relative;
   overflow: hidden;
-  padding: 22px 22px 26px;
+  padding: 16px 22px 22px;
   outline: none;
 }
 
@@ -57,12 +56,8 @@ button {
   content: "";
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-  background-size: 72px 72px;
-  opacity: 0.14;
-  mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.45) 60%, transparent 100%);
+  background: radial-gradient(circle at 50% 22%, rgba(255, 223, 184, 0.24), transparent 42%);
+  opacity: 0.9;
   pointer-events: none;
 }
 
@@ -222,7 +217,7 @@ button {
 }
 
 .hero-band {
-  display: grid;
+  display: none;
   grid-template-columns: 1.1fr 0.9fr;
   gap: 22px;
   align-items: stretch;
@@ -342,7 +337,7 @@ button {
 
 .playfield {
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) 320px;
+  grid-template-columns: minmax(0, 1.15fr) 330px;
   gap: 18px;
   align-items: start;
   padding-bottom: 16px;
@@ -377,15 +372,18 @@ button {
 .board-frame {
   margin-top: 16px;
   position: relative;
-  border-radius: 24px;
-  padding: 14px;
+  border-radius: 26px;
+  padding: clamp(14px, 2vw, 22px);
   background:
-    radial-gradient(circle at 16% 18%, rgba(255, 255, 255, 0.08), transparent 20%),
-    radial-gradient(circle at 80% 20%, rgba(255, 198, 224, 0.16), transparent 24%),
-    linear-gradient(180deg, rgba(8, 12, 20, 0.88), rgba(8, 13, 22, 0.98));
-  border: 1px solid rgba(255, 255, 255, 0.1);
+    linear-gradient(90deg, rgba(255, 213, 132, 0.4), transparent 10% 90%, rgba(255, 213, 132, 0.32)),
+    linear-gradient(180deg, #9a5b34 0%, #6a351e 14%, #4b2619 86%, #a86a3e 100%);
+  border: 2px solid rgba(255, 206, 123, 0.34);
   overflow: hidden;
   touch-action: none;
+  box-shadow:
+    inset 0 0 0 8px rgba(66, 29, 18, 0.42),
+    inset 0 10px 0 rgba(255, 230, 174, 0.18),
+    0 26px 70px rgba(43, 15, 10, 0.5);
 }
 
 .board-frame::before,
@@ -398,79 +396,103 @@ button {
 
 .board-frame::before {
   background:
-    radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.12), transparent 36%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent 30%, rgba(0, 0, 0, 0.14));
-  mix-blend-mode: screen;
-  opacity: 0.35;
+    radial-gradient(circle at 12% 12%, rgba(255, 226, 164, 0.45), transparent 10%),
+    radial-gradient(circle at 88% 12%, rgba(255, 226, 164, 0.45), transparent 10%),
+    radial-gradient(circle at 12% 88%, rgba(255, 226, 164, 0.42), transparent 10%),
+    radial-gradient(circle at 88% 88%, rgba(255, 226, 164, 0.42), transparent 10%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 36%, rgba(0, 0, 0, 0.18));
+  opacity: 0.85;
 }
 
 .board-grid {
   position: relative;
   z-index: 1;
   display: grid;
-  gap: 8px;
+  gap: clamp(4px, 0.75vw, 8px);
   aspect-ratio: 1;
+  padding: clamp(8px, 1vw, 12px);
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(84, 44, 30, 0.2), rgba(56, 28, 20, 0.38)),
+    #5d321f;
+  box-shadow: inset 0 12px 34px rgba(35, 14, 9, 0.45);
 }
 
 .tile {
   position: relative;
-  border-radius: 16px;
+  border-radius: 10px;
   overflow: hidden;
   min-height: 0;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.09),
-    inset 0 -12px 26px rgba(0, 0, 0, 0.16);
+    inset 0 1px 0 rgba(255, 255, 255, 0.58),
+    inset 0 -10px 18px rgba(120, 75, 38, 0.16),
+    0 6px 12px rgba(59, 27, 19, 0.22);
 }
 
 .tile.floor {
   background:
-    radial-gradient(circle at 30% 22%, rgba(255, 255, 255, 0.06), transparent 24%),
-    linear-gradient(145deg, rgba(65, 84, 104, 0.42), rgba(24, 32, 44, 0.72));
+    radial-gradient(circle at 26% 22%, rgba(255, 255, 255, 0.35), transparent 18%),
+    linear-gradient(145deg, #f4dec4, #d9b894);
 }
 
 .tile.wall {
   background:
-    radial-gradient(circle at 20% 24%, rgba(255, 255, 255, 0.08), transparent 20%),
-    linear-gradient(155deg, rgba(74, 46, 60, 0.92), rgba(33, 25, 39, 0.98));
+    linear-gradient(180deg, rgba(255, 210, 139, 0.18), transparent 32%),
+    linear-gradient(145deg, #d98fa1, #af5c6f);
+  border: 1px solid rgba(255, 232, 187, 0.42);
 }
 
 .tile-floor {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 28% 28%, rgba(255, 255, 255, 0.14), transparent 12%),
-    radial-gradient(circle at 76% 70%, rgba(255, 255, 255, 0.08), transparent 14%);
-  opacity: 0.65;
+    linear-gradient(90deg, transparent 48%, rgba(144, 95, 61, 0.14) 50%, transparent 52%),
+    linear-gradient(transparent 48%, rgba(144, 95, 61, 0.14) 50%, transparent 52%),
+    radial-gradient(circle at 28% 28%, rgba(255, 255, 255, 0.22), transparent 12%);
+  opacity: 0.78;
 }
 
 .tile.goal .tile-floor {
   background:
-    radial-gradient(circle, rgba(255, 255, 255, 0.22), transparent 52%),
-    radial-gradient(circle at 50% 45%, color-mix(in srgb, var(--theme) 55%, transparent), transparent 62%),
-    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.16), transparent 66%);
+    linear-gradient(145deg, rgba(255, 214, 223, 0.95), rgba(213, 112, 132, 0.82)),
+    radial-gradient(circle at 30% 22%, rgba(255, 255, 255, 0.35), transparent 28%);
+  opacity: 1;
 }
 
 .tile-goal {
   position: absolute;
-  inset: 15% 15%;
+  inset: 14% 14%;
   border-radius: 50%;
-  border: 2px solid color-mix(in srgb, var(--theme-soft) 88%, white 14%);
+  border: 3px solid rgba(255, 244, 220, 0.86);
   box-shadow:
-    0 0 18px color-mix(in srgb, var(--theme) 56%, white 16%),
-    inset 0 0 18px rgba(255, 255, 255, 0.12);
+    0 0 18px rgba(255, 126, 157, 0.8),
+    inset 0 0 18px rgba(255, 255, 255, 0.24);
+}
+
+.tile-goal::before {
+  content: "★";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #ffd15e;
+  font-size: clamp(18px, 3vw, 34px);
+  text-shadow: 0 2px 0 #bd7732, 0 0 12px rgba(255, 225, 100, 0.85);
 }
 
 .crate {
   position: absolute;
-  inset: 13%;
-  border-radius: 16px;
+  inset: 8%;
+  border-radius: 9px;
   background:
-    linear-gradient(160deg, rgba(255, 243, 225, 0.14), rgba(0, 0, 0, 0.08)),
-    linear-gradient(145deg, #b37a4d, #704226);
+    linear-gradient(45deg, transparent 44%, rgba(82, 39, 19, 0.45) 45% 55%, transparent 56%),
+    linear-gradient(-45deg, transparent 44%, rgba(82, 39, 19, 0.45) 45% 55%, transparent 56%),
+    linear-gradient(160deg, rgba(255, 232, 191, 0.2), rgba(0, 0, 0, 0.1)),
+    linear-gradient(145deg, #b9753e, #70401f);
   box-shadow:
-    inset 0 2px 0 rgba(255, 255, 255, 0.24),
-    inset 0 -14px 20px rgba(0, 0, 0, 0.28),
-    0 12px 22px rgba(0, 0, 0, 0.26);
+    inset 0 3px 0 rgba(255, 226, 174, 0.34),
+    inset 0 -14px 20px rgba(53, 24, 10, 0.32),
+    0 13px 18px rgba(64, 25, 13, 0.34);
 }
 
 .crate::before,
@@ -478,8 +500,8 @@ button {
   content: "";
   position: absolute;
   inset: 14%;
-  border: 2px solid rgba(255, 240, 220, 0.35);
-  border-radius: 12px;
+  border: 2px solid rgba(255, 218, 128, 0.52);
+  border-radius: 8px;
 }
 
 .crate::after {
@@ -502,7 +524,7 @@ button {
 }
 
 .sprite {
-  --size: 38px;
+  --size: clamp(36px, 4.5vw, 56px);
   --hair: #5b4336;
   --dress: #f49ab7;
   --dress-dark: #c65f86;
@@ -514,8 +536,20 @@ button {
   top: 50%;
   width: var(--size);
   height: calc(var(--size) * 1.4);
-  transform: translate(-50%, -56%);
-  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.28));
+  transform: translate(-50%, -62%) rotateX(8deg);
+  filter: drop-shadow(0 12px 10px rgba(67, 28, 18, 0.32));
+}
+
+.sprite.dir-left {
+  transform: translate(-50%, -62%) rotateX(8deg) rotate(-3deg) scaleX(-1);
+}
+
+.sprite.dir-right {
+  transform: translate(-50%, -62%) rotateX(8deg) rotate(3deg);
+}
+
+.sprite.dir-up {
+  transform: translate(-50%, -62%) rotateX(8deg) scale(0.96);
 }
 
 .sprite-large {
