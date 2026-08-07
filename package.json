@@ -10,7 +10,8 @@
     "build": "vinext build",
     "start": "vinext start",
     "preview:local": "node scripts/serve-local-preview.mjs",
-    "test": "npm run build && node --test tests/rendered-html.test.mjs",
+    "test": "npm run build && npm run validate:levels && node --test tests",
+    "validate:levels": "node scripts/validate-levels.mjs",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "db:generate": "drizzle-kit generate"
   },

@@ -4,25 +4,27 @@ import "./globals.css";
 
 export async function generateMetadata(): Promise<Metadata> {
   const headerList = await headers();
-  const host = headerList.get("x-forwarded-host") ?? headerList.get("host") ?? "localhost:3000";
+  const host = headerList.get("x-forwarded-host") ?? headerList.get("host") ?? "localhost:3217";
   const protocol = headerList.get("x-forwarded-proto") ?? (host.includes("localhost") ? "http" : "https");
   const base = new URL(`${protocol}://${host}`);
 
   return {
     metadataBase: base,
-    title: "裙装推箱子",
-    description: "50 关 2.5D 推箱子小游戏，带换装收集、触控操作和本地存档。",
+    title: "莉莉的衣橱冒险",
+    description: "50关2.5D推箱子换装游戏，支持键盘、滑动和手机方向键操作。",
     icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
     openGraph: {
-      title: "裙装推箱子",
-      description: "50 关 2.5D 推箱子小游戏，带换装收集、触控操作和本地存档。",
+      title: "莉莉的衣橱冒险",
+      description: "推动宝箱收集星光，每完成若干关卡解锁一套新裙子。",
       type: "website",
       locale: "zh_CN",
+      images: ["/art/start-screen.png"],
     },
     twitter: {
       card: "summary_large_image",
-      title: "裙装推箱子",
-      description: "50 关 2.5D 推箱子小游戏，带换装收集、触控操作和本地存档。",
+      title: "莉莉的衣橱冒险",
+      description: "50关2.5D推箱子换装游戏。",
+      images: ["/art/start-screen.png"],
     },
   };
 }

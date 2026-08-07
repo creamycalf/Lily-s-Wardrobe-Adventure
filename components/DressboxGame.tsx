@@ -2,604 +2,428 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, KeyboardEvent, PointerEvent as ReactPointerEvent } from "react";
-import {
-  createInitialState,
-  formatProgress,
-  generateLevels,
-  isSolved,
-  moveState,
-  stateToCells,
-  type GameState,
-  type Level,
-} from "../lib/sokoban";
+import { createInitialState, generateLevels, isSolved, moveState, stateToCells, type GameState } from "../lib/sokoban";
 
 const TOTAL_LEVELS = 50;
-const STORAGE_KEY = "dressbox-quest-save-v2";
+const STORAGE_KEY = "lilys-wardrobe-adventure-v1";
 
 const outfits = [
-  { id: "rose", name: "玫瑰晨礼裙", unlockAt: 1, dress: "#f49ab7", dressDark: "#c65f86", trim: "#fff4fa", bow: "#efc4d6", hair: "#5d3a2d", shine: "rgba(255, 216, 230, 0.65)", mood: "默认装扮" },
-  { id: "moon", name: "月光绸裙", unlockAt: 5, dress: "#c9d4ff", dressDark: "#7d90d8", trim: "#f8fbff", bow: "#91a8ff", hair: "#4f3c36", shine: "rgba(211, 223, 255, 0.72)", mood: "柔光反射" },
-  { id: "garden", name: "花园围裙", unlockAt: 10, dress: "#93dcb3", dressDark: "#4d9e73", trim: "#f4fff7", bow: "#d5f4e1", hair: "#5b4336", shine: "rgba(203, 255, 224, 0.66)", mood: "清新花香" },
-  { id: "pearl", name: "珍珠礼裙", unlockAt: 15, dress: "#f8dccb", dressDark: "#d1907a", trim: "#fff8f4", bow: "#ffd5c4", hair: "#4b3732", shine: "rgba(255, 236, 226, 0.68)", mood: "华丽展开" },
-  { id: "sky", name: "晴空短裙", unlockAt: 20, dress: "#8de2ef", dressDark: "#48a7c5", trim: "#f0feff", bow: "#caf8ff", hair: "#55453d", shine: "rgba(201, 248, 255, 0.7)", mood: "轻盈跳跃" },
-  { id: "berry", name: "莓果蓬裙", unlockAt: 25, dress: "#d97dbd", dressDark: "#a34d87", trim: "#fff0f8", bow: "#f4b4d9", hair: "#54352f", shine: "rgba(255, 217, 240, 0.64)", mood: "甜味加成" },
-  { id: "sapphire", name: "蓝宝石礼裙", unlockAt: 30, dress: "#7698ff", dressDark: "#4159b9", trim: "#f6f8ff", bow: "#afbefc", hair: "#493833", shine: "rgba(214, 226, 255, 0.7)", mood: "冷调闪光" },
-  { id: "lavender", name: "薰衣草晚裙", unlockAt: 35, dress: "#c79cff", dressDark: "#8456c2", trim: "#fbf5ff", bow: "#ead7ff", hair: "#59453e", shine: "rgba(241, 226, 255, 0.7)", mood: "梦境感" },
-  { id: "ember", name: "琥珀披风裙", unlockAt: 40, dress: "#f1b56e", dressDark: "#c7702d", trim: "#fff9ef", bow: "#ffd8ac", hair: "#52392f", shine: "rgba(255, 232, 192, 0.72)", mood: "暖色高光" },
-  { id: "crown", name: "王冠终章裙", unlockAt: 45, dress: "#f6a8aa", dressDark: "#cf6674", trim: "#fff8fb", bow: "#ffe0ea", hair: "#443534", shine: "rgba(255, 229, 233, 0.75)", mood: "终章庆典" },
+  { id: "rose", name: "玫瑰晨礼裙", unlockAt: 1, asset: "/art/outfit-rose.png", color: "#f3a0b9", boardFilter: "brightness(1)" },
+  { id: "bakery", name: "蓝莓烘焙裙", unlockAt: 5, asset: "/art/outfit-bakery.png", color: "#91bde0", boardFilter: "hue-rotate(165deg) saturate(.82) brightness(1.03)" },
+  { id: "garden", name: "薄荷花园裙", unlockAt: 10, asset: "/art/outfit-garden.png", color: "#a9cf77", boardFilter: "hue-rotate(72deg) saturate(.72) brightness(1.04)" },
+  { id: "pearl", name: "珍珠茶会裙", unlockAt: 15, asset: "/art/outfit-pearl.png", color: "#f0ded0", boardFilter: "saturate(.3) brightness(1.12) sepia(.12)" },
+  { id: "berry", name: "莓果丝绒裙", unlockAt: 20, asset: "/art/outfit-berry.png", color: "#9e315e", boardFilter: "hue-rotate(322deg) saturate(1.35) brightness(.82)" },
+  { id: "violet", name: "紫罗兰礼裙", unlockAt: 25, asset: "/art/outfit-violet.png", color: "#ad62ac", boardFilter: "hue-rotate(250deg) saturate(.92) brightness(.94)" },
+  { id: "ice", name: "冰晶星光裙", unlockAt: 30, asset: "/art/outfit-ice.png", color: "#83b9ef", boardFilter: "hue-rotate(175deg) saturate(.7) brightness(1.14)" },
+  { id: "moon", name: "月光公主裙", unlockAt: 35, asset: "/art/outfit-moon.png", color: "#b89ce5", boardFilter: "hue-rotate(235deg) saturate(.6) brightness(1.08)" },
+  { id: "autumn", name: "琥珀斗篷裙", unlockAt: 40, asset: "/art/outfit-autumn.png", color: "#d89051", boardFilter: "hue-rotate(338deg) saturate(.95) sepia(.28) brightness(.96)" },
+  { id: "winter", name: "冬日红斗篷", unlockAt: 43, asset: "/art/outfit-winter.png", color: "#ca4a58", boardFilter: "hue-rotate(323deg) saturate(1.45) brightness(.86)" },
+  { id: "starlight", name: "星空魔法裙", unlockAt: 47, asset: "/art/outfit-starlight.png", color: "#243d85", boardFilter: "hue-rotate(188deg) saturate(1.4) brightness(.65)" },
+  { id: "crown", name: "皇冠终章礼服", unlockAt: 50, asset: "/art/outfit-crown.png", color: "#f0cf99", boardFilter: "sepia(.55) saturate(.85) brightness(1.08)" },
 ] as const;
+
+const chapters = [
+  { name: "阳光玩具房", range: "1—10", className: "theme-toy", background: "/art-v2/backgrounds/chapter-01-toy-room.png", board: "/art-v2/scene-board-agent-test.png", grid: { left: "50%", top: "50%", width: "76%", height: "44.2%" } },
+  { name: "草莓茶会厅", range: "11—20", className: "theme-tea", background: "/art-v2/backgrounds/chapter-02-tea-room.png", board: "/art-v3/scene-board-chapter-02.png", grid: { left: "50%", top: "49.2%", width: "68%", height: "42.8%" } },
+  { name: "秘密花园房", range: "21—30", className: "theme-garden", background: "/art-v2/backgrounds/chapter-03-garden-room.png", board: "/art-v3/scene-board-chapter-03.png", grid: { left: "50%", top: "49%", width: "69%", height: "44.8%" } },
+  { name: "月光魔法阁楼", range: "31—40", className: "theme-moon", background: "/art-v2/backgrounds/chapter-04-moon-attic.png", board: "/art-v3/scene-board-chapter-04.png", grid: { left: "50%", top: "50.7%", width: "64%", height: "42.3%" } },
+  { name: "皇家衣帽间", range: "41—50", className: "theme-royal", background: "/art-v2/backgrounds/chapter-05-royal-wardrobe.png", board: "/art-v3/scene-board-chapter-05.png", grid: { left: "50%", top: "56.1%", width: "70%", height: "43.7%" } },
+] as const;
+
+const obstacleNames = ["teddy", "rocking-horse", "wardrobe", "stool", "chest", "pink-chest"] as const;
 
 type Outfit = (typeof outfits)[number];
-type Snapshot = GameState & { levelIndex: number; moves: number; pushes: number };
-type SaveData = { levelIndex: number; outfitId: string; unlocked: string[]; completedLevel: number };
+type Direction = "up" | "down" | "left" | "right";
+type Screen = "start" | "game" | "map";
+type Snapshot = GameState & { levelIndex: number };
 
-const fallbackTemplates = [
-  [
-    "#########",
-    "#.......#",
-    "#..#....#",
-    "#.......#",
-    "#..###..#",
-    "#...#...#",
-    "#.......#",
-    "#.......#",
-    "#########",
-  ],
-  [
-    "##########",
-    "#........#",
-    "#..##....#",
-    "#....#...#",
-    "#....#...#",
-    "#...###..#",
-    "#........#",
-    "#..####..#",
-    "#........#",
-    "##########",
-  ],
-  [
-    "#########",
-    "#.......#",
-    "#.###...#",
-    "#...#...#",
-    "#...#...#",
-    "#...###.#",
-    "#.......#",
-    "#..#....#",
-    "#########",
-  ],
-  [
-    "##########",
-    "#........#",
-    "#..##.#..#",
-    "#..##.#..#",
-    "#........#",
-    "#..####..#",
-    "#........#",
-    "#..#..#..#",
-    "#........#",
-    "##########",
-  ],
-  [
-    "#########",
-    "#.......#",
-    "#.#####.#",
-    "#.#...#.#",
-    "#.#...#.#",
-    "#.#...#.#",
-    "#.#####.#",
-    "#.......#",
-    "#########",
-  ],
-  [
-    "##########",
-    "#....#...#",
-    "#....#...#",
-    "#........#",
-    "#.##.##..#",
-    "#........#",
-    "#...#....#",
-    "#...#....#",
-    "#........#",
-    "##########",
-  ],
-] as const;
+function clampLevel(index: number) {
+  return Math.max(0, Math.min(TOTAL_LEVELS - 1, index));
+}
 
-function makeFallbackLevel(index: number): Level {
-  const rows = fallbackTemplates[(index - 1) % fallbackTemplates.length].map((row) => row.split(""));
-  const height = rows.length;
-  const width = rows[0]?.length ?? 0;
-  const floorCells: Array<{ x: number; y: number }> = [];
-
-  for (let y = 0; y < height; y += 1) {
-    for (let x = 0; x < width; x += 1) {
-      if (rows[y][x] !== "#") floorCells.push({ x, y });
-    }
+function playerAsset(outfit: Outfit, direction: Direction, action: "idle" | "walk" | "push", boardMode = false) {
+  if (boardMode) return `/art-v2/character-topdown/${direction}.png`;
+  if (outfit.id !== "rose") return outfit.asset;
+  const base = "/art-v2/character";
+  if (action === "push") {
+    if (direction === "left") return `${base}/push-left-1.png`;
+    if (direction === "right") return `${base}/push-right-1.png`;
+    if (direction === "up") return `${base}/push-right-2.png`;
+    return `${base}/push-left-2.png`;
   }
-
-  const floorSet = new Set(floorCells.map((cell) => `${cell.x},${cell.y}`));
-  for (const boxCell of floorCells) {
-    for (const dir of [
-      { x: 1, y: 0 },
-      { x: -1, y: 0 },
-      { x: 0, y: 1 },
-      { x: 0, y: -1 },
-    ]) {
-      const player = { x: boxCell.x - dir.x, y: boxCell.y - dir.y };
-      const goal = { x: boxCell.x + dir.x, y: boxCell.y + dir.y };
-      if (!floorSet.has(`${player.x},${player.y}`) || !floorSet.has(`${goal.x},${goal.y}`)) continue;
-
-      return {
-        id: index,
-        name: `备用花厅 · ${index}`,
-        rows: fallbackTemplates[(index - 1) % fallbackTemplates.length].map((row) => row),
-        player,
-        boxes: [boxCell],
-        goals: [goal],
-        solutionPushes: 1,
-      };
-    }
+  if (action === "walk") {
+    if (direction === "left") return `${base}/walk-left-2.png`;
+    if (direction === "right") return `${base}/walk-right-2.png`;
+    if (direction === "up") return `${base}/walk-right-4.png`;
+    return `${base}/walk-front-1.png`;
   }
-
-  const first = floorCells[0] ?? { x: 1, y: 1 };
-  const second = floorCells[1] ?? { x: 2, y: 1 };
-  const third = floorCells[2] ?? { x: 3, y: 1 };
-
-  return {
-    id: index,
-    name: `备用花厅 · ${index}`,
-    rows: fallbackTemplates[(index - 1) % fallbackTemplates.length].map((row) => row),
-    player: first,
-    boxes: [second],
-    goals: [third],
-    solutionPushes: 1,
-  };
+  if (direction === "left") return `${base}/idle-left-1.png`;
+  if (direction === "right") return `${base}/idle-right-1.png`;
+  if (direction === "up") return `${base}/idle-right-2.png`;
+  return `${base}/idle-front-1.png`;
 }
 
-function buildLevelSet(count: number) {
-  try {
-    return generateLevels(count);
-  } catch {
-    return Array.from({ length: count }, (_, i) => makeFallbackLevel(i + 1));
-  }
-}
-
-function clampLevel(levelIndex: number) {
-  return Math.max(0, Math.min(TOTAL_LEVELS - 1, levelIndex));
-}
-
-function readSave(): SaveData {
-  if (typeof window === "undefined") {
-    return { levelIndex: 0, outfitId: outfits[0].id, unlocked: [outfits[0].id], completedLevel: 0 };
-  }
-
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return { levelIndex: 0, outfitId: outfits[0].id, unlocked: [outfits[0].id], completedLevel: 0 };
-    const parsed = JSON.parse(raw) as Partial<SaveData>;
-    return {
-      levelIndex: clampLevel(parsed.levelIndex ?? 0),
-      outfitId: typeof parsed.outfitId === "string" ? parsed.outfitId : outfits[0].id,
-      unlocked: Array.isArray(parsed.unlocked) && parsed.unlocked.length > 0 ? parsed.unlocked : [outfits[0].id],
-      completedLevel: Math.max(0, Math.min(TOTAL_LEVELS, parsed.completedLevel ?? parsed.levelIndex ?? 0)),
-    };
-  } catch {
-    return { levelIndex: 0, outfitId: outfits[0].id, unlocked: [outfits[0].id], completedLevel: 0 };
-  }
-}
-
-function cellClass(cell: { isWall: boolean; isGoal: boolean; isBox: boolean; isPlayer: boolean }) {
-  return [
-    "tile",
-    cell.isWall ? "wall" : "floor",
-    cell.isGoal ? "goal" : "",
-    cell.isBox ? "box-present" : "",
-    cell.isPlayer ? "player-present" : "",
-  ]
-    .filter(Boolean)
-    .join(" ");
-}
-
-function OutfitSprite({ outfit, large = false, direction = "down" }: { outfit: Outfit; large?: boolean; direction?: "up" | "down" | "left" | "right" }) {
-  const style = {
-    "--dress": outfit.dress,
-    "--dress-dark": outfit.dressDark,
-    "--trim": outfit.trim,
-    "--bow": outfit.bow,
-    "--hair": outfit.hair,
-    "--shine": outfit.shine,
-  } as CSSProperties;
-
-  return (
-    <div className={`sprite dir-${direction} ${large ? "sprite-large" : ""}`} style={style}>
-      <span className="sprite-glow" />
-      <span className="sprite-hair back" />
-      <span className="sprite-head" />
-      <span className="sprite-blush left" />
-      <span className="sprite-blush right" />
-      <span className="sprite-eye left" />
-      <span className="sprite-eye right" />
-      <span className="sprite-bow" />
-      <span className="sprite-hair front" />
-      <span className="sprite-body" />
-      <span className="sprite-sleeve left" />
-      <span className="sprite-sleeve right" />
-      <span className="sprite-belt" />
-      <span className="sprite-skirt" />
-      <span className="sprite-ribbon" />
-      <span className="sprite-leg left" />
-      <span className="sprite-leg right" />
-      <span className="sprite-shoe left" />
-      <span className="sprite-shoe right" />
-    </div>
-  );
-}
-
-function BoardCell({
-  cell,
-  outfit,
-  direction,
-}: {
-  cell: { isWall: boolean; isGoal: boolean; isBox: boolean; isPlayer: boolean };
+function Character({ outfit, direction, action, className = "" }: {
   outfit: Outfit;
-  direction: "up" | "down" | "left" | "right";
+  direction: Direction;
+  action: "idle" | "walk" | "push";
+  className?: string;
 }) {
-  return (
-    <div className={cellClass(cell)}>
-      {!cell.isWall ? <div className="tile-floor" /> : null}
-      {!cell.isWall && cell.isGoal ? <span className="tile-goal" aria-hidden="true" /> : null}
-      {cell.isBox ? <span className="crate" aria-hidden="true" /> : null}
-      {cell.isPlayer ? <OutfitSprite outfit={outfit} direction={direction} /> : null}
-    </div>
-  );
+  const boardMode = className.split(" ").includes("board-character");
+  const portraitDirection = !boardMode && outfit.id !== "rose" ? `portrait-direction direction-${direction}` : "";
+  return <img className={`character ${className} outfit-${outfit.id} action-${action} ${portraitDirection}`} src={playerAsset(outfit, direction, action, boardMode)} alt="" draggable={false} />;
 }
 
 export default function DressboxGame() {
-  const levels = useMemo(() => buildLevelSet(TOTAL_LEVELS), []);
-  const [booted, setBooted] = useState(false);
+  const levels = useMemo(() => generateLevels(TOTAL_LEVELS), []);
+  const [screen, setScreen] = useState<Screen>("start");
+  const [mapChapter, setMapChapter] = useState<number | null>(null);
   const [levelIndex, setLevelIndex] = useState(0);
-  const [currentState, setCurrentState] = useState<Snapshot | null>(null);
+  const [currentState, setCurrentState] = useState<Snapshot>(() => ({ ...createInitialState(levels[0]), levelIndex: 0 }));
   const [history, setHistory] = useState<Snapshot[]>([]);
-  const [unlocked, setUnlocked] = useState<string[]>([outfits[0].id]);
   const [completedLevel, setCompletedLevel] = useState(0);
-  const [selectedOutfit, setSelectedOutfit] = useState(outfits[0].id);
-  const [toast, setToast] = useState("");
-  const [showWardrobe, setShowWardrobe] = useState(true);
-  const [pointer, setPointer] = useState({ x: 0.5, y: 0.22 });
-  const [direction, setDirection] = useState<"up" | "down" | "left" | "right">("right");
-  const boardRef = useRef<HTMLDivElement>(null);
-  const gestureRef = useRef<{ x: number; y: number; active: boolean } | null>(null);
+  const [selectedOutfit, setSelectedOutfit] = useState<string>("rose");
+  const [unlocked, setUnlocked] = useState<string[]>(["rose"]);
+  const [showWardrobe, setShowWardrobe] = useState(false);
+  const [showResult, setShowResult] = useState(false);
+  const [direction, setDirection] = useState<Direction>("right");
+  const [action, setAction] = useState<"idle" | "walk" | "push">("idle");
+  const [gesture, setGesture] = useState<{ x: number; y: number } | null>(null);
+  const actionTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const gameRef = useRef<HTMLElement | null>(null);
 
   const level = levels[levelIndex];
   const outfit = outfits.find((item) => item.id === selectedOutfit) ?? outfits[0];
-  const theme = {
-    "--theme": outfit.dress,
-    "--theme-dark": outfit.dressDark,
-    "--theme-soft": outfit.shine,
-  } as CSSProperties;
+  const cells = useMemo(() => stateToCells(level, currentState), [level, currentState]);
+  // The generated level keeps a one-cell wall ring for collision detection.
+  // It is not part of the painted seven-by-seven board, so never give those
+  // logical border cells visual grid tracks.
+  const visibleCells = useMemo(
+    () => cells.slice(1, -1).flatMap((row) => row.slice(1, -1)),
+    [cells],
+  );
+  const chapterIndex = Math.min(4, Math.floor(levelIndex / 10));
+  const chapter = chapters[chapterIndex];
+  const integratedBoardMode = true;
+  const chapterAssetBase = `/art-v2/objects/chapter-${String(chapterIndex + 1).padStart(2, "0")}`;
+  const completion = Math.round((completedLevel / TOTAL_LEVELS) * 100);
+  const journeyChapter = Math.min(4, Math.floor(Math.max(completedLevel, levelIndex) / 10));
 
   useEffect(() => {
-    const save = readSave();
-    setLevelIndex(save.levelIndex);
-    setSelectedOutfit(save.outfitId);
-    setUnlocked(save.unlocked);
-    setCompletedLevel(save.completedLevel);
-    setBooted(true);
-  }, []);
+    try {
+      const raw = window.localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const save = JSON.parse(raw) as { levelIndex?: number; selectedOutfit?: string; unlocked?: string[]; completedLevel?: number };
+      const savedCompletedLevel = Math.max(0, Math.min(TOTAL_LEVELS, save.completedLevel ?? 0));
+      // Older saves could point at any level in an unlocked chapter. Keep the
+      // resume point inside the sequentially cleared range during migration.
+      const nextLevel = Math.min(clampLevel(save.levelIndex ?? 0), Math.min(TOTAL_LEVELS - 1, savedCompletedLevel));
+      setLevelIndex(nextLevel);
+      setCurrentState({ ...createInitialState(levels[nextLevel]), levelIndex: nextLevel });
+      setSelectedOutfit(save.selectedOutfit ?? "rose");
+      setUnlocked(save.unlocked?.length ? save.unlocked : ["rose"]);
+      setCompletedLevel(savedCompletedLevel);
+    } catch {
+      // Ignore damaged local saves.
+    }
+  }, [levels]);
 
   useEffect(() => {
-    if (!booted) return;
-    window.localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify({ levelIndex, outfitId: selectedOutfit, unlocked, completedLevel } satisfies SaveData),
-    );
-  }, [booted, levelIndex, selectedOutfit, unlocked, completedLevel]);
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ levelIndex, selectedOutfit, unlocked, completedLevel }));
+  }, [levelIndex, selectedOutfit, unlocked, completedLevel]);
 
   useEffect(() => {
-    if (!level) return;
-    setCurrentState({ ...createInitialState(level), levelIndex });
+    if (screen !== "game") return;
+    const frame = window.requestAnimationFrame(() => gameRef.current?.focus());
+    return () => window.cancelAnimationFrame(frame);
+  }, [screen, levelIndex]);
+
+  function resetLevel(nextIndex = levelIndex, nextScreen: Screen = "game") {
+    const target = clampLevel(nextIndex);
+    setLevelIndex(target);
+    setCurrentState({ ...createInitialState(levels[target]), levelIndex: target });
     setHistory([]);
-  }, [levelIndex, level]);
+    setShowResult(false);
+    setScreen(nextScreen);
+    window.requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "instant" }));
+  }
 
-  useEffect(() => {
-    if (!toast) return;
-    const timer = window.setTimeout(() => setToast(""), 2400);
-    return () => window.clearTimeout(timer);
-  }, [toast]);
-
-  function unlockForLevel(nextLevelIndex: number) {
-    const eligible = outfits.filter((item) => item.unlockAt <= nextLevelIndex).map((item) => item.id);
-    const merged = Array.from(new Set([...unlocked, ...eligible]));
-
-    if (merged.length !== unlocked.length) {
-      const newest = outfits.find((item) => !unlocked.includes(item.id) && item.unlockAt <= nextLevelIndex);
-      if (newest) setToast(`解锁新裙装：${newest.name}`);
-      setUnlocked(merged);
-    }
-
-    if (!merged.includes(selectedOutfit)) {
-      setSelectedOutfit(merged[merged.length - 1] ?? outfits[0].id);
-    }
+  function animate(nextAction: "walk" | "push") {
+    setAction(nextAction);
+    if (actionTimer.current) clearTimeout(actionTimer.current);
+    actionTimer.current = setTimeout(() => setAction("idle"), 220);
   }
 
   function playMove(dx: number, dy: number) {
-    if (!currentState) return;
+    const nextDirection = dx < 0 ? "left" : dx > 0 ? "right" : dy < 0 ? "up" : "down";
+    setDirection(nextDirection);
     const next = moveState(level, currentState, dx, dy);
     if (!next) return;
-    setDirection(dx < 0 ? "left" : dx > 0 ? "right" : dy < 0 ? "up" : "down");
-    const snapshot: Snapshot = { ...next, levelIndex, moves: next.moves, pushes: next.pushes };
-    setCurrentState(snapshot);
+    animate(next.pushes > currentState.pushes ? "push" : "walk");
     setHistory((items) => [...items, currentState]);
-
+    const snapshot = { ...next, levelIndex };
+    setCurrentState(snapshot);
     if (isSolved(level, snapshot.boxes)) {
       const cleared = Math.max(completedLevel, levelIndex + 1);
       setCompletedLevel(cleared);
-      setToast(levelIndex >= TOTAL_LEVELS - 1 ? "全部通关，王冠终章裙已经属于你。" : "通关了，可以进入下一关。");
-      unlockForLevel(cleared);
+      setUnlocked(Array.from(new Set([...unlocked, ...outfits.filter((item) => item.unlockAt <= cleared).map((item) => item.id)])));
+      setShowResult(true);
     }
   }
 
   function undoMove() {
     const previous = history.at(-1);
     if (!previous) return;
-    setHistory((items) => items.slice(0, -1));
     setCurrentState(previous);
+    setHistory((items) => items.slice(0, -1));
+    setShowResult(false);
   }
 
-  function restartLevel() {
-    setCurrentState({ ...createInitialState(level), levelIndex });
-    setHistory([]);
-    setToast("已重新开始这一关。");
-  }
-
-  function goToLevel(nextIndex: number) {
-    const clamped = clampLevel(nextIndex);
-    setLevelIndex(clamped);
-    setToast(`进入第 ${clamped + 1} 关`);
-  }
-
-  function nextLevel() {
-    if (levelIndex >= TOTAL_LEVELS - 1) return;
-    goToLevel(levelIndex + 1);
-  }
-
-  function previousLevel() {
-    if (levelIndex <= 0) return;
-    goToLevel(levelIndex - 1);
-  }
-
-  function handleKey(event: KeyboardEvent<HTMLDivElement>) {
-    if (event.key === "ArrowUp" || event.key === "w" || event.key === "W") playMove(0, -1);
-    if (event.key === "ArrowDown" || event.key === "s" || event.key === "S") playMove(0, 1);
-    if (event.key === "ArrowLeft" || event.key === "a" || event.key === "A") playMove(-1, 0);
-    if (event.key === "ArrowRight" || event.key === "d" || event.key === "D") playMove(1, 0);
-    if (event.key === "z" || event.key === "Z") undoMove();
-  }
-
-  function onPointerDown(event: ReactPointerEvent<HTMLDivElement>) {
-    gestureRef.current = { x: event.clientX, y: event.clientY, active: true };
+  function handleKey(event: KeyboardEvent<HTMLElement>) {
+    if (screen !== "game" || showWardrobe) return;
+    if (event.key === "ArrowUp" || event.key.toLowerCase() === "w") playMove(0, -1);
+    if (event.key === "ArrowDown" || event.key.toLowerCase() === "s") playMove(0, 1);
+    if (event.key === "ArrowLeft" || event.key.toLowerCase() === "a") playMove(-1, 0);
+    if (event.key === "ArrowRight" || event.key.toLowerCase() === "d") playMove(1, 0);
+    if (event.key.toLowerCase() === "z") undoMove();
   }
 
   function onPointerUp(event: ReactPointerEvent<HTMLDivElement>) {
-    const gesture = gestureRef.current;
-    gestureRef.current = null;
-    if (!gesture?.active) return;
-
+    if (!gesture) return;
     const dx = event.clientX - gesture.x;
     const dy = event.clientY - gesture.y;
+    setGesture(null);
     if (Math.abs(dx) < 18 && Math.abs(dy) < 18) return;
-
-    if (Math.abs(dx) > Math.abs(dy)) {
-      playMove(dx > 0 ? 1 : -1, 0);
-    } else {
-      playMove(0, dy > 0 ? 1 : -1);
-    }
+    if (Math.abs(dx) > Math.abs(dy)) playMove(dx > 0 ? 1 : -1, 0);
+    else playMove(0, dy > 0 ? 1 : -1);
   }
 
-  const cells = useMemo(() => (currentState ? stateToCells(level, currentState) : []), [currentState, level]);
-  const solved = currentState ? isSolved(level, currentState.boxes) : false;
-  const completion = Math.round((Math.min(Math.max(completedLevel, levelIndex + (solved ? 1 : 0)), TOTAL_LEVELS) / TOTAL_LEVELS) * 100);
-  const unlockedCount = unlocked.length;
-  const currentTheme = outfits.find((item) => item.id === selectedOutfit) ?? outfits[0];
-  const currentChapter = `第 ${levelIndex + 1} 关 / ${TOTAL_LEVELS} 关`;
+  const themeStyle = {
+    "--accent": outfit.color,
+    "--chapter-bg": `url("${chapter.background}")`,
+    "--integrated-board-bg": `url("${chapter.board}")`,
+    "--board-grid-left": chapter.grid.left,
+    "--board-grid-top": chapter.grid.top,
+    "--board-grid-width": chapter.grid.width,
+    "--board-grid-height": chapter.grid.height,
+    "--character-filter": outfit.boardFilter,
+    "--tile-floor": `url("${chapterAssetBase}/floor-cream.png")`,
+    "--tile-goal": `url("${chapterAssetBase}/goal.png")`,
+    "--tile-goal-lit": `url("${chapterAssetBase}/goal-lit.png")`,
+    "--crate-art": integratedBoardMode
+      ? 'url("/art-v2/objects-topdown/crate.png")'
+      : `url("${chapterAssetBase}/crate.png")`,
+    "--internal-wall-art": integratedBoardMode
+      ? 'url("/art-v2/objects-topdown/pink-block.png")'
+      : "none",
+  } as CSSProperties;
+
+  if (screen === "start") {
+    return (
+      <main className="start-screen">
+        <div className="start-art" />
+        <div className="start-copy">
+          <p className="eyebrow">50关 · 推箱解谜 · 梦幻换装</p>
+          <h1>莉莉的<br />衣橱冒险</h1>
+          <p>把每一只宝箱推到星光位置，打开衣橱里珍藏的新裙子。</p>
+          <button className="primary-button start-button" type="button" onClick={() => setScreen("game")}>开始游戏</button>
+          <button className="text-button" type="button" onClick={() => setScreen("map")}>选择关卡</button>
+        </div>
+        <span className="watermark-cover" aria-hidden="true" />
+      </main>
+    );
+  }
+
+  if (screen === "map") {
+    if (mapChapter === null) {
+      return (
+        <main className="map-screen chapter-journey-screen">
+          <div className="map-backdrop" />
+          <section className="map-journey">
+            <div className="map-art" />
+            <header className="map-header">
+              <button className="round-icon" type="button" onClick={() => setScreen("start")} aria-label="返回首页"><img src="/art/ui-back.png" alt="" /></button>
+              <div><span>莉莉的梦幻旅程</span><h1>选择章节</h1></div>
+              <div className="star-counter"><img src="/art/ui-star.png" alt="" />{completedLevel}</div>
+            </header>
+            <div className="chapter-route" aria-label="五个章节">
+              {chapters.map((item, index) => {
+                const progress = Math.max(0, Math.min(10, completedLevel - index * 10));
+                const isUnlocked = index === 0 || completedLevel >= index * 10;
+                return (
+                  <button
+                    type="button"
+                    key={item.name}
+                    className={`chapter-node chapter-node-${index + 1} ${isUnlocked ? "unlocked" : "locked"}`}
+                    onClick={() => isUnlocked && setMapChapter(index)}
+                    disabled={!isUnlocked}
+                    aria-label={`进入${item.name}`}
+                  >
+                    <span>第 {index + 1} 章</span>
+                    <strong>{item.name}</strong>
+                    <small>{progress}/10</small>
+                  </button>
+                );
+              })}
+              <Character outfit={outfit} direction="up" action="walk" className={`map-girl map-girl-${journeyChapter + 1}`} />
+            </div>
+          </section>
+        </main>
+      );
+    }
+
+    const mapChapterData = chapters[mapChapter];
+    const mapChapterAssetBase = `/art-v2/objects/chapter-${String(mapChapter + 1).padStart(2, "0")}`;
+    const chapterStart = mapChapter * 10;
+    return (
+      <main
+        className={`chapter-map-screen ${mapChapterData.className}`}
+        style={{ "--chapter-bg": `url("${mapChapterData.background}")`, "--level-cushion": `url("${mapChapterAssetBase}/goal.png")` } as CSSProperties}
+      >
+        <header className="map-header">
+          <button className="round-icon" type="button" onClick={() => setMapChapter(null)} aria-label="返回章节"><img src="/art/ui-back.png" alt="" /></button>
+          <div><span>第 {mapChapter + 1} 章 · {mapChapterData.range}关</span><h1>{mapChapterData.name}</h1></div>
+          <div className="star-counter"><img src="/art/ui-star.png" alt="" />{completedLevel}</div>
+        </header>
+        <section className="chapter-level-scene">
+          <Character outfit={outfit} direction="right" action="walk" className="chapter-map-girl" />
+          <div className="chapter-levels">
+          {levels.slice(chapterStart, chapterStart + 10).map((item, localIndex) => {
+            const index = chapterStart + localIndex;
+            const isAvailable = index <= completedLevel;
+            return (
+            <button
+              type="button"
+              key={item.id}
+              className={`${index === levelIndex ? "active" : ""} ${index < completedLevel ? "cleared" : ""} ${isAvailable ? "" : "locked"}`}
+              onClick={() => isAvailable && resetLevel(index)}
+              disabled={!isAvailable}
+              aria-label={`进入第${index + 1}关`}
+              data-layout={item.rows.join("|")}
+              data-boxes={item.boxes.length}
+              data-pushes={item.solutionPushes}
+            >
+              <small>{index < completedLevel ? "★" : `第${index + 1}关`}</small>
+            </button>
+          )})}
+          </div>
+        </section>
+      </main>
+    );
+  }
 
   return (
-    <main
-      className="game-shell"
-      style={
-        {
-          ...theme,
-          "--pointer-x": `${pointer.x * 100}%`,
-          "--pointer-y": `${pointer.y * 100}%`,
-        } as CSSProperties
-      }
-      onKeyDown={handleKey}
-      tabIndex={0}
-    >
-      <div className="ambient ambient-a" aria-hidden="true" />
-      <div className="ambient ambient-b" aria-hidden="true" />
-      <div className="ambient ambient-c" aria-hidden="true" />
-      <div className="grain" aria-hidden="true" />
-      <div className="pointer-halo" aria-hidden="true" />
-
-      <header className="topbar">
-        <div className="brand-block">
-          <div className="mark" aria-hidden="true">
-            <span />
-          </div>
-          <div>
-            <p>裙装推箱子</p>
-            <span>50 关 · 触控 + 键盘 · 换装收集</span>
-          </div>
-        </div>
-
-        <div className="meta-strip">
-          <span>{currentChapter}</span>
-          <span>{completion}% 完成</span>
-          <span>{formatProgress(unlockedCount, outfits.length)} 套裙装</span>
+    <main ref={gameRef} className={`game-screen ${chapter.className} integrated-board-mode`} style={themeStyle} onKeyDown={handleKey} tabIndex={0}>
+      <header className="game-header">
+        <button className="round-icon" type="button" onClick={() => setScreen("start")} aria-label="返回首页"><img src="/art/ui-home.png" alt="" /></button>
+        <div className="level-title"><span>{chapter.name}</span><strong>第 {levelIndex + 1} 关</strong></div>
+        <div className="header-actions">
+          <button className="round-icon" type="button" onClick={() => setScreen("map")} aria-label="选择关卡"><img src="/art/ui-star.png" alt="" /></button>
+          <button className="round-icon" type="button" onClick={() => setShowWardrobe(true)} aria-label="打开衣橱"><img src="/art/wardrobe.png" alt="" /></button>
         </div>
       </header>
 
-      <section className="hero-band">
-        <div className="hero-copy">
-          <p className="kicker">2.5D DRESS PUZZLE</p>
-          <h1>把箱子推到位，也把裙子一点点收集齐。</h1>
-          <p>
-            这是一款按照你给的效果图方向做的商业感 H5 推箱子：柔光、礼裙、暖色金边、2.5D 氛围场景。
-            共 50 关，支持触控、方向键和撤销，并且会随着进度解锁新裙装。
-          </p>
-        </div>
-
-        <div className="hero-portrait">
-          <div className="portrait-stage portrait-stage-image">
-            <img className="hero-scene" src="/game-scene-2p5d.png" alt="2.5D 推箱子场景效果图" />
-            <div className="portrait-note">
-              <strong>2.5D 视觉基准</strong>
-              <span>暖金边框 · 玻璃质感 · 商业游戏氛围</span>
-            </div>
+      <section className="game-stage">
+        <div className="stage-heading">
+          <div><span>{chapter.range}关主题 · 难度 {"★".repeat(level.difficulty)}</span><h2>{level.name}</h2></div>
+          <div className="move-stats">
+            <span>宝箱 <b>{level.boxes.length}</b></span>
+            <span>步数 <b>{currentState.moves}</b></span>
+            <span>推箱 <b>{currentState.pushes}</b></span>
           </div>
+          </div>
+          <div className="board-frame" onPointerDown={(event) => setGesture({ x: event.clientX, y: event.clientY })} onPointerUp={onPointerUp}>
+            {integratedBoardMode ? <div className="integrated-board-art" aria-hidden="true" /> : null}
+            <div className="board-grid" style={{ gridTemplateColumns: "repeat(7, minmax(0, 1fr))" }}>
+            {visibleCells.map((cell) => (
+              <div
+                key={`${cell.x}-${cell.y}`}
+                className={[
+                  "tile",
+                  cell.isWall && cell.isBorder ? "wall border-wall" : "floor",
+                  cell.isWall && !cell.isBorder ? "internal-wall" : "",
+                  cell.isGoal ? "goal" : "",
+                  cell.isBox && cell.isGoal ? "box-complete" : "",
+                  cell.isBox ? "has-box" : "",
+                  cell.isPlayer ? "has-player" : "",
+                ].filter(Boolean).join(" ")}
+                style={{ zIndex: cell.isPlayer || cell.isBox || (cell.isWall && !cell.isBorder) ? 20 + cell.y : undefined }}
+              >
+                {cell.isWall && !cell.isBorder ? (
+                  <img
+                    className="obstacle-prop"
+                    src={`${chapterAssetBase}/${obstacleNames[(cell.x * 3 + cell.y + chapterIndex) % obstacleNames.length]}.png`}
+                    alt=""
+                  />
+                ) : null}
+                {cell.isBox ? <span className="crate" /> : null}
+                {cell.isPlayer ? <Character outfit={outfit} direction={direction} action={action} className="board-character" /> : null}
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="game-toolbar">
+          <button type="button" onClick={undoMove}><span>↶</span>撤销</button>
+          <button type="button" onClick={() => resetLevel(levelIndex)}><img src="/art/ui-restart.png" alt="" />重来</button>
+          <button type="button" onClick={() => setShowWardrobe(true)}><img src="/art/wardrobe.png" alt="" />换装</button>
+        </div>
+        <div className="touch-pad" aria-label="方向控制">
+          <i /><button type="button" onClick={() => playMove(0, -1)} aria-label="向上">▲</button><i />
+          <button type="button" onClick={() => playMove(-1, 0)} aria-label="向左">◀</button>
+          <button type="button" onClick={() => playMove(0, 1)} aria-label="向下">▼</button>
+          <button type="button" onClick={() => playMove(1, 0)} aria-label="向右">▶</button>
         </div>
       </section>
 
-      <section className="playfield">
-        <div className="board-panel">
-          <div className="panel-head">
-            <div>
-              <p>当前关卡</p>
-              <h2>{level.name}</h2>
+      <footer className="progress-footer"><span>衣橱旅程</span><div><i style={{ width: `${completion}%` }} /></div><strong>{completedLevel}/50</strong></footer>
+
+      {showWardrobe ? (
+        <div className="modal-backdrop" onClick={() => setShowWardrobe(false)}>
+          <section className="wardrobe-modal" onClick={(event) => event.stopPropagation()}>
+            <button className="modal-close" type="button" onClick={() => setShowWardrobe(false)}>×</button>
+            <div className="wardrobe-scene">
+              <img src="/art/wardrobe.png" alt="" />
+              <Character outfit={outfit} direction="down" action="idle" className="wardrobe-character" />
+              <div><span>当前穿搭</span><strong>{outfit.name}</strong></div>
             </div>
-            <div className="panel-stats">
-              <span>步数 {currentState?.moves ?? 0}</span>
-              <span>推箱 {currentState?.pushes ?? 0}</span>
-            </div>
-          </div>
-
-          <div
-            className="board-frame"
-            ref={boardRef}
-            onPointerDown={onPointerDown}
-            onPointerUp={onPointerUp}
-            onPointerMove={(event) => {
-              const board = boardRef.current;
-              if (!board) return;
-              const rect = board.getBoundingClientRect();
-              setPointer({
-                x: (event.clientX - rect.left) / rect.width,
-                y: (event.clientY - rect.top) / rect.height,
-              });
-            }}
-          >
-            <div className="board-grid" style={{ gridTemplateColumns: `repeat(${level.rows[0]?.length ?? 0}, minmax(0, 1fr))` }}>
-              {cells.map((row) => row.map((cell) => <BoardCell key={`${cell.x}-${cell.y}`} cell={cell} outfit={currentTheme} direction={direction} />))}
-            </div>
-
-            <div className={`win-banner ${solved ? "show" : ""}`}>
-              <strong>通关成功</strong>
-              <span>这关的裙装已准备好解锁。</span>
-            </div>
-          </div>
-
-          <div className="control-row">
-            <button type="button" onClick={previousLevel} aria-label="上一关">←</button>
-            <button type="button" onClick={undoMove} aria-label="撤销一步">撤销</button>
-            <button type="button" onClick={restartLevel} aria-label="重新开始本关">重来</button>
-            <button type="button" onClick={nextLevel} aria-label="下一关">→</button>
-          </div>
-
-          <div className="touch-pad" aria-label="方向控制">
-            <div />
-            <button type="button" onClick={() => playMove(0, -1)} aria-label="向上移动">↑</button>
-            <div />
-            <button type="button" onClick={() => playMove(-1, 0)} aria-label="向左移动">←</button>
-            <button type="button" onClick={() => playMove(0, 1)} aria-label="向下移动">↓</button>
-            <button type="button" onClick={() => playMove(1, 0)} aria-label="向右移动">→</button>
-          </div>
-        </div>
-
-        <aside className={`wardrobe-panel ${showWardrobe ? "open" : ""}`}>
-          <div className="panel-head">
-            <div>
-              <p>衣橱</p>
-              <h2>换装系统</h2>
-            </div>
-            <button type="button" onClick={() => setShowWardrobe((value) => !value)}>{showWardrobe ? "收起" : "展开"}</button>
-          </div>
-
-          <p className="wardrobe-copy">
-            每通关几关，就会解锁一套新裙子。你可以随时换上喜欢的装扮，继续推进后面的关卡。
-          </p>
-
-          <div className="wardrobe-preview">
-            <img className="wardrobe-photo" src="/hero-girl-2p5d.png" alt="2.5D 少女角色设计图" />
-            <div>
-              <strong>{currentTheme.name}</strong>
-              <span>{currentTheme.mood}</span>
-            </div>
-          </div>
-
-          <div className="wardrobe-grid">
-            {outfits.map((item) => {
-              const unlockedNow = unlocked.includes(item.id);
-              const active = item.id === selectedOutfit;
-              return (
-                <button
-                  type="button"
-                  key={item.id}
-                  className={`wardrobe-card ${active ? "active" : ""} ${unlockedNow ? "" : "locked"}`}
-                  onClick={() => {
-                    if (!unlockedNow) return;
-                    setSelectedOutfit(item.id);
-                    setToast(`换上了 ${item.name}`);
-                  }}
-                >
-                  <span className="wardrobe-swatch" style={{ background: item.dress }} />
-                  <span className="wardrobe-meta">
-                    <strong>{item.name}</strong>
-                    <small>{unlockedNow ? "已解锁" : `第 ${item.unlockAt} 关解锁`}</small>
-                  </span>
-                  <span className="wardrobe-lock">{unlockedNow ? (active ? "已穿戴" : "可穿戴") : "锁定"}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="level-map">
-            <div className="level-map-head">
-              <strong>关卡地图</strong>
-              <span>{completedLevel}/{TOTAL_LEVELS}</span>
-            </div>
-            <div className="level-dots" aria-label="50 关关卡地图">
-              {levels.map((item, index) => {
-                const active = index === levelIndex;
-                const cleared = index < completedLevel;
+            <div className="outfit-grid">
+              {outfits.map((item) => {
+                const isUnlocked = unlocked.includes(item.id);
+                const isActive = selectedOutfit === item.id;
                 return (
                   <button
                     type="button"
                     key={item.id}
-                    className={`level-dot ${active ? "active" : ""} ${cleared ? "cleared" : ""}`}
-                    onClick={() => goToLevel(index)}
-                    aria-label={`进入第 ${index + 1} 关`}
+                    className={`${isActive ? "active" : ""} ${isUnlocked ? "" : "locked"}`}
+                    onClick={() => {
+                      if (!isUnlocked) return;
+                      setSelectedOutfit(item.id);
+                      setShowWardrobe(false);
+                    }}
                   >
-                    {index + 1}
+                    <img src={item.asset} alt={item.name} />
+                    {!isUnlocked ? <span><img src="/art/ui-lock.png" alt="" />第{item.unlockAt}关</span> : null}
+                    <strong>{item.name}</strong>
                   </button>
                 );
               })}
             </div>
-          </div>
-        </aside>
-      </section>
-
-      <section className="footer-bar">
-        <div>
-          <p>进度条</p>
-          <div className="progress-track">
-            <span style={{ width: `${completion}%` }} />
-          </div>
+          </section>
         </div>
-        <button type="button" onClick={() => setToast("已保存到本地。")}>保存进度</button>
-      </section>
+      ) : null}
 
-      {toast ? <div className="toast">{toast}</div> : null}
+      {showResult ? (
+        <div className="modal-backdrop result-backdrop">
+          <section className="result-card">
+            <div className="result-illustration"><img src="/art/girl-celebrate.png" alt="" /></div>
+            <div className="result-stars">★ ★ ★</div>
+            <h2>{levelIndex === 49 ? "皇冠终章完成！" : "通关成功！"}</h2>
+            <p>星光已经收进衣橱，继续寻找下一套漂亮裙子吧。</p>
+            <button className="primary-button" type="button" onClick={() => levelIndex === 49 ? setScreen("map") : resetLevel(levelIndex + 1)}>{levelIndex === 49 ? "查看全部关卡" : "下一关"}</button>
+            <button className="text-button" type="button" onClick={() => setShowResult(false)}>留在本关</button>
+          </section>
+        </div>
+      ) : null}
     </main>
   );
 }

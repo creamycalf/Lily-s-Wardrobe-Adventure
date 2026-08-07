@@ -1,5 +1,27 @@
-node_modules
-.npm-cache
-dist
-dev.log
+node_modules/
+node_modules.broken/
+.npm-cache/
+.wrangler/
+.tmp/
+tmp/
+dist/
+build/
+*.log
+screenshot-*.png
+scripts/__pycache__/
 public/og.png
+
+# Generation inputs and superseded exploratory exports stay in the local art
+# archive. Runtime-ready assets live in public/art, public/art-v2 and art-v3.
+public/art-source/
+public/generated/
+public/sliced/
+public/art-v2/atlases/
+public/art-v2/frames/
+public/art-v2/character-topdown-manual/
+public/art-v2/character-topdown/*-green.png
+public/art-v2/character-topdown/rose-*.png
+public/art-v2/character-topdown/preview-on-board.png
+public/art-v2/board-master-*.png
+public/art-v2/character-master-*.png
+public/art-v2/character-board-match-test*.png

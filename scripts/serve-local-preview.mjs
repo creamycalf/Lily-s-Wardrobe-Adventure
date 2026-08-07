@@ -5,7 +5,8 @@ import worker from "../dist/server/index.js";
 
 const projectRoot = resolve(new URL("..", import.meta.url).pathname.slice(1));
 const clientRoot = resolve(projectRoot, "dist/client");
-const port = Number(process.env.PORT ?? process.argv.at(-1) ?? 3217);
+const requestedPort = Number(process.env.PORT ?? process.argv[2]);
+const port = Number.isInteger(requestedPort) && requestedPort > 0 ? requestedPort : 3217;
 
 const types = new Map([
   [".css", "text/css; charset=utf-8"],
