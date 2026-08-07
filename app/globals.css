@@ -1175,10 +1175,10 @@ button, [role="button"] { -webkit-tap-highlight-color: transparent; }
 .integrated-board-mode .crate {
   inset: auto;
   z-index: 5;
-  left: 0;
-  bottom: 2%;
-  width: 100%;
-  height: 122%;
+  left: 7%;
+  bottom: 1%;
+  width: 86%;
+  height: 108%;
   transform: none;
   transform-origin: center bottom;
   filter: drop-shadow(0 5px 4px rgba(71,34,17,.22));
@@ -1194,12 +1194,12 @@ button, [role="button"] { -webkit-tap-highlight-color: transparent; }
   content: "";
   position: absolute;
   z-index: 6;
-  left: 2%;
-  right: 2%;
-  top: -12%;
-  bottom: 2%;
+  left: 12%;
+  right: 12%;
+  top: 5%;
+  bottom: 4%;
   border: 0;
-  background: var(--internal-wall-art) center bottom / contain no-repeat;
+  background: var(--internal-wall-art) center / 92% 92% no-repeat;
   filter: drop-shadow(0 5px 4px rgba(86,43,39,.22));
 }
 
@@ -1207,9 +1207,9 @@ button, [role="button"] { -webkit-tap-highlight-color: transparent; }
   /* Source PNGs contain transparent space below the shoes. Pull the image
      box down so the painted soles, rather than the PNG edge, own the tile's
      bottom-centre contact point. */
-  bottom: -24%;
-  width: 210%;
-  height: 315%;
+  bottom: -8%;
+  width: 150%;
+  height: 190%;
   max-width: none;
   transform: translateX(-50%);
   object-position: center bottom;

@@ -42,7 +42,9 @@ function clampLevel(index: number) {
 }
 
 function playerAsset(outfit: Outfit, direction: Direction, action: "idle" | "walk" | "push", boardMode = false) {
-  if (boardMode) return `/art-v2/character-topdown/${direction}.png`;
+  // The board uses the compact four-view set: it has a shared foot baseline
+  // and a consistent camera, unlike the much taller portrait renders.
+  if (boardMode) return `/art-v2/character-topdown/rose-${direction}.png`;
   if (outfit.id !== "rose") return outfit.asset;
   const base = "/art-v2/character";
   if (action === "push") {
