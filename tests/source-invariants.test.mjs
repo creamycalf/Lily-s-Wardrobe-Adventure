@@ -19,6 +19,8 @@ test("all five chapters have a committed seven-by-seven scene board", async () =
     "public/art-v3/scene-board-chapter-03.png",
     "public/art-v3/scene-board-chapter-04.png",
     "public/art-v3/scene-board-chapter-05.png",
+    "public/art-v3/level-map-clean.png",
+    "public/art-v3/start-screen-clean.png",
   ];
 
   await Promise.all(boards.map((board) => access(new URL(board, root))));

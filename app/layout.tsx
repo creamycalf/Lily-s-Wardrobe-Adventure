@@ -18,13 +18,13 @@ export async function generateMetadata(): Promise<Metadata> {
       description: "推动宝箱收集星光，每完成若干关卡解锁一套新裙子。",
       type: "website",
       locale: "zh_CN",
-      images: ["/art/start-screen.png"],
+      images: ["/art-v3/start-screen-clean.png"],
     },
     twitter: {
       card: "summary_large_image",
       title: "莉莉的衣橱冒险",
       description: "50关2.5D推箱子换装游戏。",
-      images: ["/art/start-screen.png"],
+      images: ["/art-v3/start-screen-clean.png"],
     },
   };
 }

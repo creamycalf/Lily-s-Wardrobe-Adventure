@@ -229,7 +229,6 @@ export default function DressboxGame() {
           <button className="primary-button start-button" type="button" onClick={() => setScreen("game")}>开始游戏</button>
           <button className="text-button" type="button" onClick={() => setScreen("map")}>选择关卡</button>
         </div>
-        <span className="watermark-cover" aria-hidden="true" />
       </main>
     );
   }

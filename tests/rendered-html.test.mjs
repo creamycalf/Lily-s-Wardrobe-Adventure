@@ -39,11 +39,13 @@ test("build output includes generated art and playable game code", async () => {
   const css = await readFile(new URL(cssFile, assetsRoot), "utf8");
   const game = await readFile(new URL(gameFile, assetsRoot), "utf8");
 
-  assert.match(css, /art\/start-screen\.png/);
+  assert.match(css, /art-v3\/start-screen-clean\.png/);
+  assert.doesNotMatch(css, /watermark-cover/);
   assert.match(css, /board-frame/);
   assert.match(css, /--tile-goal/);
   assert.match(css, /--crate-art/);
-  assert.match(css, /art\/level-map\.png/);
+  assert.match(css, /art-v3\/level-map-clean\.png/);
+  assert.doesNotMatch(css, /art\/level-map\.png/);
   assert.match(game, /lilys-wardrobe-adventure/);
   assert.match(game, /皇冠终章礼服/);
   assert.match(game, /art-v2\/objects/);

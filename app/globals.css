@@ -60,7 +60,7 @@ button, [role="button"] { -webkit-tap-highlight-color: transparent; }
   inset: 0;
   background:
     linear-gradient(90deg, rgba(255,247,236,.94) 0%, rgba(255,247,236,.2) 49%, transparent 70%),
-    url("/art/start-screen.png") center 34% / cover no-repeat;
+    url("/art-v3/start-screen-clean.png") center 34% / cover no-repeat;
 }
 
 .start-copy {
@@ -101,16 +101,6 @@ button, [role="button"] { -webkit-tap-highlight-color: transparent; }
 
 .start-button { min-width: 210px; }
 
-.watermark-cover {
-  position: absolute;
-  z-index: 3;
-  right: 0;
-  bottom: 0;
-  width: 260px;
-  height: 82px;
-  background: linear-gradient(135deg, transparent 0 18%, #f0d2ca 56%);
-}
-
 .map-screen {
   position: relative;
   min-height: 100svh;
@@ -123,7 +113,7 @@ button, [role="button"] { -webkit-tap-highlight-color: transparent; }
   inset: 0;
   background:
     linear-gradient(180deg, rgba(244,195,201,.26), transparent 14% 86%, rgba(245,211,207,.95)),
-    url("/art/level-map.png") center / cover no-repeat;
+    url("/art-v3/level-map-clean.png") center / cover no-repeat;
 }
 
 .map-header, .game-header {
@@ -484,7 +474,7 @@ button, [role="button"] { -webkit-tap-highlight-color: transparent; }
 .map-backdrop {
   position: fixed;
   inset: -35px;
-  background: linear-gradient(rgba(91,54,104,.25), rgba(244,205,212,.32)), url("/art/level-map.png") center / cover;
+  background: linear-gradient(rgba(91,54,104,.25), rgba(244,205,212,.32)), url("/art-v3/level-map-clean.png") center / cover;
   filter: blur(24px) saturate(.86);
   transform: scale(1.08);
 }
@@ -492,7 +482,8 @@ button, [role="button"] { -webkit-tap-highlight-color: transparent; }
 .map-journey {
   position: relative;
   z-index: 1;
-  width: min(100vw, 56.25svh);
+  /* The chapter journey art is a 2:3 portrait, so keep its native ratio. */
+  width: min(100vw, 66.667svh);
   min-width: min(100vw, 360px);
   height: 100svh;
   overflow: hidden;
@@ -500,7 +491,7 @@ button, [role="button"] { -webkit-tap-highlight-color: transparent; }
 }
 
 .map-journey .map-art {
-  background: linear-gradient(180deg, rgba(255,247,237,.08), transparent 18% 90%, rgba(247,213,213,.38)), url("/art/level-map.png") center / cover no-repeat;
+  background: linear-gradient(180deg, rgba(255,247,237,.08), transparent 18% 90%, rgba(247,213,213,.38)), url("/art-v3/level-map-clean.png") center / cover no-repeat;
 }
 
 .map-journey .map-header {
@@ -847,7 +838,7 @@ button, [role="button"] { -webkit-tap-highlight-color: transparent; }
   .start-art {
     background:
       linear-gradient(180deg, transparent 0 48%, rgba(255,244,235,.8) 65%, #f5d6cf 82%),
-      url("/art/start-screen.png") center top / cover no-repeat;
+      url("/art-v3/start-screen-clean.png") center top / cover no-repeat;
   }
   .start-copy {
     width: 100%;
@@ -859,7 +850,6 @@ button, [role="button"] { -webkit-tap-highlight-color: transparent; }
   }
   .start-copy h1 { font-size: clamp(48px,14vw,72px); }
   .start-copy > p:not(.eyebrow) { margin: 14px 0 20px; }
-  .watermark-cover { height: 55px; background: #f5d6cf; }
   .game-screen { padding: 8px 8px 14px; }
   .game-header { min-height: 54px; }
   .round-icon { width: 44px; height: 44px; }
