@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>itch.io 上架填写参考｜莉莉的衣橱冒险</title>
+  <style>
+    :root{--red:#fa315c;--ink:#252525;--muted:#666;--line:#cfcfcf;--bg:#f5f5f5;--note:#fffec1;--blue:#2498d8;--green:#247a48}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 Arial,"Microsoft YaHei",sans-serif}
+    .page{width:min(960px,calc(100% - 24px));margin:0 auto;background:#fff;border:1px solid #ccc;min-height:100vh}
+    header{padding:12px 38px;border-bottom:1px solid #ccc;background:#f1f1f1;font-weight:700}.title{padding:24px 38px 16px;font-size:21px;font-weight:700}
+    .warning{padding:10px 38px;background:var(--note);border-block:1px solid #e6e38b;color:#5d581d}.warning b{color:#d52749}
+    .notice{margin:26px 38px 0;padding:8px 14px;border-left:4px solid #ddd}.notice strong{display:block}.notice span{color:var(--green)}
+    .grid{display:grid;grid-template-columns:minmax(0,1fr) 316px;gap:24px;padding:18px 38px 42px}.section{grid-column:1/-1;font-size:21px;font-weight:700;margin:18px 0 0;border-top:1px solid #eee;padding-top:22px}
+    .field{margin:0 0 22px}.field label{display:block;font-weight:700;margin-bottom:5px}.help{margin:-2px 0 6px;color:var(--muted);font-size:13px}.row{display:flex;gap:8px;align-items:center}
+    input[type=text],input[type=url],select,textarea{width:100%;border:1px solid var(--line);background:#fff;padding:9px 10px;color:#333;font:inherit}textarea{min-height:220px;resize:vertical;white-space:pre-wrap}.slug{display:flex;align-items:center;border:1px solid var(--line);background:#fff}.slug span{padding-left:10px;color:#777}.slug input{border:0;padding-left:2px}
+    .copy{flex:0 0 auto;border:0;background:#666;color:#fff;border-radius:3px;padding:9px 12px;cursor:pointer}.copy.done{background:var(--green)}
+    .upload{border:1px dashed #bbb;padding:18px;background:#fafafa}.upload b{display:block;margin-bottom:8px}.file{padding:9px 10px;margin:7px 0;background:#fff;border:1px solid #ddd;word-break:break-all}.badge{display:inline-block;background:#ececec;border-radius:2px;padding:2px 6px;margin-left:5px;color:#555;font-size:12px}
+    .cover{border:1px dashed #bbb;padding:14px;text-align:center}.cover img{display:block;width:100%;aspect-ratio:315/250;object-fit:cover}.cover a{display:inline-block;margin-top:12px;background:var(--red);color:#fff;text-decoration:none;padding:8px 12px;border-radius:3px}
+    .choices{display:flex;gap:8px;flex-wrap:wrap}.choice{border:1px solid #bbb;padding:7px 12px;min-width:138px;background:#fff}.choice.selected{border-color:#333;font-weight:700}.choice input{accent-color:var(--red)}
+    .tags{border:1px solid var(--line);padding:5px;min-height:38px}.tag{display:inline-flex;align-items:center;background:var(--blue);color:#fff;border:1px solid #177fb9;border-radius:3px;padding:2px 7px;margin:2px}.tag::after{content:"×";margin-left:6px;opacity:.8}
+    .ai{border:1px solid #ccc;padding:12px;background:#fafafa}.checklist label{display:inline-block;border:1px solid #ccc;background:#fff;padding:5px 8px;margin:5px 5px 0 0}.checklist input{accent-color:#398de5}
+    .shot-list{display:grid;grid-template-columns:1fr 1fr;gap:8px}.shot{border:1px solid #ddd;padding:8px;background:#fff}.shot img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}.shot small{display:block;margin-top:5px;word-break:break-all;color:#555}
+    .tip{padding:12px 14px;background:#edf8ff;border-left:4px solid var(--blue);margin:8px 0 20px}.danger{padding:12px 14px;background:#fff0f1;border-left:4px solid var(--red);margin:8px 0 20px}
+    .final{grid-column:1/-1;background:#f7f7f7;border:1px solid #ccc;padding:18px}.final h2{margin:0 0 8px}.final ol{margin:8px 0 0;padding-left:20px}.pink{color:var(--red)}
+    @media(max-width:760px){.grid{grid-template-columns:1fr;padding-inline:18px}.section{grid-column:1}.title,.warning,header{padding-inline:18px}.notice{margin-inline:18px}.shot-list{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<main class="page">
+  <header>仪表板</header>
+  <div class="title">创建一个新项目｜《莉莉的衣橱冒险》填写样板</div>
+  <div class="warning">这是<strong>本地填写参考页</strong>，不会向 itch.io 提交任何信息。请打开 itch.io 后台，在对应位置照着填。</div>
+  <div class="notice"><strong>先保持“草稿”，不要马上公开。</strong><span>文件上传并测试成功、截图无旧版“50关”文字后，再改成公开。</span></div>
+
+  <div class="grid">
+    <section>
+      <div class="field"><label>标题</label><div class="row"><input id="title" type="text" value="Lily's Wardrobe Adventure / 莉莉的衣橱冒险"><button class="copy" data-copy="title">复制</button></div></div>
+      <div class="field"><label>项目网址</label><div class="slug"><span>https://linxxcat000.itch.io/</span><input id="slug" type="text" value="lilys-wardrobe-adventure"></div><p class="help">如果提示已被占用，改成 <b>lilys-wardrobe-quest</b>。</p></div>
+      <div class="field"><label>简短描述或标语</label><div class="row"><input id="blurb" type="text" value="Push boxes, collect starlight, and unlock magical outfits across 100 puzzle levels."><button class="copy" data-copy="blurb">复制</button></div><p class="help">中文备用：推动木箱点亮星光，在100个谜题中解锁莉莉的梦幻衣橱。</p></div>
+      <div class="field"><label>分类</label><select><option selected>游戏 — 一款你可以玩的软件</option></select></div>
+      <div class="field"><label>项目类型</label><select><option selected>可下载 — 您有可供下载的文件</option></select><p class="help">当前先用 Windows/Android 下载版；不要选 HTML，现有 H5 压缩包是旧版本。</p></div>
+      <div class="field"><label>发布状态</label><select><option selected>已发布 — 项目已完成，但可能还会进行一些更新</option></select></div>
+    </section>
+
+    <aside>
+      <div class="cover"><img src="itch-assets/itch-cover-315x250.jpg" alt="itch 封面"><a href="itch-assets/itch-cover-315x250.jpg" download>下载并上传这张封面</a></div>
+      <p class="help">封面尺寸：315×250。已从新版公主、木箱、城堡图标制作。</p>
+      <div class="field"><label>游戏视频或预告片</label><input type="url" placeholder="暂时留空；只能填 YouTube 或 Vimeo 链接"><p class="help">不要填本地视频路径或其他平台页面。</p></div>
+      <div class="field"><label>屏幕截图</label><p class="help">建议上传 3–5 张。旧 TapTap 首页图带“50关”字样，不要上传。</p></div>
+    </aside>
+
+    <h2 class="section">定价</h2>
+    <section>
+      <div class="choices"><label class="choice selected"><input type="checkbox" checked> 0 美元或捐款</label><label class="choice"><input type="checkbox"> 有薪酬的</label><label class="choice"><input type="checkbox"> 无需付款</label></div>
+      <div class="field" style="margin-top:14px"><label>建议捐款金额</label><input type="text" value="$2.00"></div>
+      <div class="tip">这样即使你还没有配置收款账户，玩家也可以直接免费下载并给反馈；以后配置付款方式后，仍可接受自愿捐款。</div>
+    </section>
+
+    <aside><div class="danger"><b>不要选择“有薪酬的”</b><br>截图顶部已经提示你尚未配置付款方式。设置最低价格高于 0 会让别人无法正常下载。</div></aside>
+
+    <h2 class="section">上传</h2>
+    <section>
+      <div class="upload">
+        <b>第 1 个文件（必传，Windows）</b>
+        <div class="file">releases/lilys-wardrobe-pc-win-x64-v0.2.0.zip <span class="badge">约 449 MB</span></div>
+        <p class="help">上传后勾选 Windows。说明填写：Unzip and run LilysWardrobeAdventure.exe</p>
+        <b>第 2 个文件（建议，Android 手机）</b>
+        <div class="file">releases/lilys-wardrobe-mobile-v0.2.0-test-signed.apk <span class="badge">约 320 MB</span></div>
+        <p class="help">上传后勾选 Android。当前是测试签名，适合 itch 试玩，不是应用商店正式签名。</p>
+        <b>第 3 个文件（可选，Android PAD）</b>
+        <div class="file">releases/lilys-wardrobe-pad-v0.2.0-test-signed.apk <span class="badge">约 320 MB</span></div>
+        <p class="help">它是横屏 PAD 专版；如果担心玩家分不清，可以暂时不传。</p>
+      </div>
+    </section>
+    <aside><div class="tip">每个文件都低于截图中的 1 GB 单文件限制。不要上传 release keystore、源代码、node_modules 或整个工程目录。</div></aside>
+
+    <h2 class="section">细节</h2>
+    <section>
+      <div class="field"><label>描述</label><div class="row" style="align-items:flex-start"><textarea id="description">Help Lily restore the lost starlight in a magical wardrobe world!
+
+Lily's Wardrobe Adventure combines classic Sokoban-style box-pushing puzzles with outfit collection and a colorful princess castle journey.
+
+FEATURES
+• 100 varied puzzle levels across 10 magical chapters
+• 21 unlockable outfits — earn a new outfit every 5 levels
+• A 3-star rating system based on pushes and movement efficiency
+• Keyboard, touch, swipe and on-screen controls
+• Original castle-adventure music and sound effects
+• Fully playable offline, with no account required
+
+WINDOWS
+Download the Windows ZIP, extract it, then run LilysWardrobeAdventure.exe.
+
+ANDROID
+Download the mobile APK for phones. A separate landscape PAD build is also available.
+
+中文简介
+帮助莉莉推动木箱、点亮星光，在10个梦幻章节和100个推箱谜题中不断前进。每5关解锁一套新衣服，并通过更少的推箱次数与移动步数挑战三星评价。
+
+当前版本为离线单机试玩版，不需要注册账号，也不包含广告或内购。欢迎在页面评论区留下操作体验、关卡难度和设备兼容性反馈。</textarea><button class="copy" data-copy="description">复制</button></div></div>
+      <div class="field"><label>类型</label><select><option selected>益智（Puzzle）</option></select></div>
+      <div class="field"><label>标签（最多 10 个）</label><div class="tags"><span class="tag">Sokoban</span><span class="tag">Puzzle</span><span class="tag">Dress up</span><span class="tag">Cute</span><span class="tag">Singleplayer</span><span class="tag">2D</span><span class="tag">Fantasy</span><span class="tag">Casual</span><span class="tag">Female Protagonist</span><span class="tag">Offline</span></div><p class="help">删除截图里的“射击游戏、战略、多人游戏”；它们与本游戏不符。</p></div>
+      <div class="field"><label>人工智能生成披露</label><label><input type="radio" checked> 是的——本项目包含生成式人工智能的输出结果。</label><div class="ai"><b>使用的是哪种人工智能生成内容？</b><div class="checklist"><label><input type="checkbox" checked> 图形</label><label><input type="checkbox" checked> 声音</label><label><input type="checkbox" checked> 文本与对话</label><label><input type="checkbox" checked> 代码</label></div></div></div>
+      <div class="field"><label>应用商店链接</label><input type="text" value="暂时全部留空"><p class="help">当前没有已公开的 Steam、Google Play、App Store 等商店页面。</p></div>
+      <div class="field"><label>自定义名词</label><input type="text" placeholder="留空，使用默认值“游戏”"></div>
+      <div class="field"><label>社区</label><label><input type="radio" checked> 评论 — 在项目页面底部加载评论线程</label><p class="help">你要收集试玩反馈，所以选“评论”；暂时不用建立独立讨论区。</p></div>
+      <div class="field"><label>可见性和访问性</label><label><input type="radio" checked> 草稿 — 只有拥有项目编辑权限的人才能查看此页面</label><br><label><input type="radio"> 受限 — 只有所有者和授权人员才能查看</label><p class="help">文件上传后先保存草稿，下载测试成功再切换为“公开”。</p></div>
+    </section>
+
+    <aside>
+      <div class="field"><label>推荐截图文件</label><div class="shot-list">
+        <div class="shot"><img src="screenshots/level-80-crystal-mobile.png"><small>level-80-crystal-mobile.png</small></div>
+        <div class="shot"><img src="screenshots/level-90-roseclock-mobile.png"><small>level-90-roseclock-mobile.png</small></div>
+        <div class="shot"><img src="screenshots/level-100-eternal-mobile.png"><small>level-100-eternal-mobile.png</small></div>
+        <div class="shot"><img src="screenshots/outfits-every-5-levels.png"><small>outfits-every-5-levels.png</small></div>
+      </div></div>
+      <div class="tip">这些截图展示了 80/90/100 关和每 5 关换装，比旧版“50关”宣传图更符合当前版本。</div>
+    </aside>
+
+    <div class="final"><h2>最终操作顺序</h2><ol><li>照此页填写，先保存为草稿。</li><li>上传 Windows ZIP；建议再上传手机 APK。</li><li>上传封面和 4 张新版截图。</li><li>在 itch 草稿页亲自下载一次，确认 ZIP 能解压启动、APK 能安装。</li><li>确认标题、文件平台标记、说明和截图都正确后，再将可见性改为公开。</li></ol></div>
+  </div>
+</main>
+<script>
+document.querySelectorAll('[data-copy]').forEach(button=>button.addEventListener('click',async()=>{const target=document.getElementById(button.dataset.copy);await navigator.clipboard.writeText(target.value);button.textContent='已复制';button.classList.add('done');setTimeout(()=>{button.textContent='复制';button.classList.remove('done')},1200)}));
+</script>
+</body>
+</html>

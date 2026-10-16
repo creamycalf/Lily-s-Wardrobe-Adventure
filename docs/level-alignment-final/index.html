@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>《莉莉的衣橱大冒险》1—100 关对齐验收</title>
+    <style>
+      :root { color-scheme: light; font-family: system-ui, "Microsoft YaHei", sans-serif; }
+      body { margin: 0; background: #f7f0e6; color: #35263f; }
+      header { position: sticky; top: 0; z-index: 2; padding: 18px 24px; background: rgba(255, 250, 244, .94); box-shadow: 0 2px 14px #7b577126; backdrop-filter: blur(10px); }
+      h1 { margin: 0 0 6px; font-size: 22px; }
+      p { margin: 0; color: #715f72; }
+      main { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; padding: 24px; }
+      figure { margin: 0; overflow: hidden; border: 1px solid #decfbe; border-radius: 14px; background: white; box-shadow: 0 5px 18px #51334818; }
+      img { display: block; width: 100%; height: auto; }
+      figcaption { padding: 9px 12px; font-weight: 700; text-align: center; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>1—100 关最终对齐截图</h1>
+      <p>用于逐关检查格子、人物、箱子、障碍物与目标亮光的位置。</p>
+    </header>
+    <main id="gallery"></main>
+    <script>
+      const gallery = document.querySelector("#gallery");
+      for (let level = 1; level <= 100; level += 1) {
+        const padded = String(level).padStart(3, "0");
+        const figure = document.createElement("figure");
+        figure.innerHTML = `<a href="level-${padded}.png" target="_blank"><img loading="lazy" src="level-${padded}.png" alt="第 ${level} 关截图"></a><figcaption>第 ${level} 关</figcaption>`;
+        gallery.append(figure);
+      }
+    </script>
+  </body>
+</html>

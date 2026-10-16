@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">莉莉的衣橱冒险</string>
+    <string name="title_activity_main">莉莉的衣橱冒险</string>
+    <string name="package_name">com.lilywardrobe.quest</string>
+    <string name="custom_url_scheme">com.lilywardrobe.quest</string>
+    <string name="hykb_game_id" translatable="false">45613</string>
+</resources>

@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>创建游戏填写参考｜莉莉的衣橱冒险</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#fff;color:#333;font:16px/1.55 Arial,"Microsoft YaHei",sans-serif}.wrap{width:min(780px,calc(100% - 30px));margin:24px auto 60px}h1{text-align:center;font-size:28px;font-weight:500;margin:20px 0 48px}.field{display:grid;grid-template-columns:120px 1fr;gap:18px;margin:0 0 32px;align-items:start}.label{text-align:right;padding-top:12px}.required::before{content:"*";color:#ff5b25;margin-right:7px}.input{height:52px;border:1px solid #d9dfe8;border-radius:4px;padding:0 14px;display:flex;align-items:center;color:#333}.counter{margin-left:auto;color:#a5a5a5}.hint{color:#999;font-size:14px;margin-top:7px}.icon-row{display:flex;align-items:center;gap:16px}.icon{width:138px;height:138px;border:1px solid #ddd;border-radius:4px;object-fit:cover}.download{display:inline-block;background:#31c46d;color:white;text-decoration:none;padding:9px 16px;border-radius:4px}.checks,.tags{display:flex;gap:18px;flex-wrap:wrap;padding-top:11px}.checks label{white-space:nowrap}.checks input{width:18px;height:18px;accent-color:#31c46d;vertical-align:-3px}.tag{border:1px solid #31c46d;color:#20aa5a;border-radius:4px;padding:7px 12px;background:#f6fff9}.create{display:block;width:375px;max-width:100%;margin:55px auto 0;border:0;border-radius:6px;background:#31c46d;color:#fff;font-size:18px;font-weight:700;padding:15px}.note{background:#fff8d9;border-left:4px solid #f3c64d;padding:12px 15px;margin:0 0 34px}.copy{border:0;background:#666;color:#fff;border-radius:3px;margin-left:8px;padding:7px 10px;cursor:pointer}@media(max-width:600px){.field{grid-template-columns:1fr;gap:5px}.label{text-align:left}.checks{gap:10px}}
+  </style>
+</head>
+<body><main class="wrap">
+  <h1>创建游戏｜填写参考</h1>
+  <div class="note">这是本地参考页，不会自动提交。请在平台后台按下面内容填写，最后确认无误后再点击真实页面的“创建游戏”。</div>
+  <div class="field"><div class="label required">游戏图标：</div><div class="icon-row"><img class="icon" src="../public/store-icon-256.jpg" alt="游戏图标"><div><a class="download" href="../public/store-icon-256.jpg" download>下载上传图标</a><div class="hint">JPG · 256×256 · 小于80KB<br>正方形，平台会自动圆角处理</div></div></div></div>
+  <div class="field"><div class="label required">游戏名称：</div><div><div class="input"><span id="cn">莉莉的衣橱冒险</span><span class="counter">7 / 64</span><button class="copy" data-copy="cn">复制</button></div><div class="hint">与当前 APK 内游戏名称一致。</div></div></div>
+  <div class="field"><div class="label">英文名称：</div><div class="input"><span id="en">Lily's Wardrobe Adventure</span><span class="counter">25 / 30</span><button class="copy" data-copy="en">复制</button></div></div>
+  <div class="field"><div class="label required">语言：</div><div><div class="checks"><label><input type="checkbox" checked> 简体中文</label><label><input type="checkbox"> 繁体中文</label><label><input type="checkbox"> 日文</label><label><input type="checkbox"> 英文</label><label><input type="checkbox"> 韩文</label><label><input type="checkbox"> 其他语言</label></div><div class="hint">当前游戏界面只有简体中文，所以只勾简体中文。英文名称不等于游戏支持英文。</div></div></div>
+  <div class="field"><div class="label required">游戏标签：</div><div><div class="tags"><span class="tag">益智解谜</span><span class="tag">休闲</span><span class="tag">推箱子</span><span class="tag">换装</span><span class="tag">单机</span></div><div class="hint">若后台没有完全相同的标签，优先顺序：益智解谜 → 休闲 → 闯关 → 换装/女性向 → 单机。</div></div></div>
+  <button class="create" type="button">填写完成后，在真实后台点击“创建游戏”</button>
+</main>
+<script>document.querySelectorAll('[data-copy]').forEach(b=>b.onclick=async()=>{await navigator.clipboard.writeText(document.getElementById(b.dataset.copy).textContent);b.textContent='已复制';setTimeout(()=>b.textContent='复制',1000)});</script>
+</body></html>

@@ -21,10 +21,12 @@ test("server-renders the Lily wardrobe adventure start screen", async () => {
 
   const html = await response.text();
   assert.match(html, /<title>莉莉的衣橱冒险<\/title>/);
-  assert.match(html, /class="start-screen"/);
-  assert.match(html, /50关/);
+  assert.match(html, /class="start-screen(?:\s|\")/);
+  assert.doesNotMatch(html, /测试版|全关卡与服装已解锁|50关\s*[·•]/);
   assert.match(html, /开始游戏/);
-  assert.match(html, /选择关卡/);
+  assert.match(html, /每次启动必读/);
+  assert.match(html, /适龄提示与隐私保护/);
+  assert.match(html, /同意以上内容并继续/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|react-loading-skeleton/i);
 });
 
@@ -40,6 +42,7 @@ test("build output includes generated art and playable game code", async () => {
   const game = await readFile(new URL(gameFile, assetsRoot), "utf8");
 
   assert.match(css, /art-v3\/start-screen-clean\.png/);
+  assert.match(css, /art-v3\/start-screen-mobile\.png/);
   assert.doesNotMatch(css, /watermark-cover/);
   assert.match(css, /board-frame/);
   assert.match(css, /--tile-goal/);
@@ -51,4 +54,5 @@ test("build output includes generated art and playable game code", async () => {
   assert.match(game, /art-v2\/objects/);
   assert.match(game, /art-v2\/character/);
   assert.match(game, /art-v3\/scene-board-chapter-05/);
+  assert.match(game, /100/);
 });

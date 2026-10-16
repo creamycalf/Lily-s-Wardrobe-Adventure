@@ -1,0 +1,6 @@
+interface:
+  display_name: "国内安卓游戏合规"
+  short_description: "为国内安卓游戏接入防沉迷、适龄提示、隐私同意及上架检查"
+  default_prompt: "使用 $china-android-game-compliance 检查并接入这个安卓游戏的国内平台合规功能。"
+policy:
+  allow_implicit_invocation: true

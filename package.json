@@ -1,6 +1,6 @@
 {
   "name": "sokoban-dress-quest",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "engines": {
     "node": ">=22.13.0"
@@ -10,18 +10,27 @@
     "build": "vinext build",
     "start": "vinext start",
     "preview:local": "node scripts/serve-local-preview.mjs",
-    "test": "npm run build && npm run validate:levels && node --test tests",
+    "build:android:web": "vite build --config vite.android.config.ts",
+    "build:android:locked": "node scripts/build-android.mjs mobile",
+    "build:mobile": "node scripts/build-android.mjs mobile",
+    "build:pad": "node scripts/build-android.mjs pad",
+    "build:pc": "node scripts/build-pc.mjs",
+    "test": "npm run build && npm run validate:levels && npm run validate:variety && node --test tests/*.test.mjs",
     "validate:levels": "node scripts/validate-levels.mjs",
-    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
+    "validate:variety": "node scripts/analyze-level-variety.mjs",
+    "lint": "eslint app components lib scripts tests --ignore-pattern dist --ignore-pattern .next",
     "db:generate": "drizzle-kit generate"
   },
   "dependencies": {
+    "@capacitor/android": "^8.5.0",
+    "@capacitor/core": "^8.5.0",
     "drizzle-orm": "0.45.2",
     "next": "16.2.6",
     "react": "19.2.6",
     "react-dom": "19.2.6"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.5.0",
     "@cloudflare/vite-plugin": "1.37.1",
     "@tailwindcss/postcss": "4.2.1",
     "@types/node": "22.19.19",
@@ -30,6 +39,7 @@
     "@vitejs/plugin-react": "6.0.2",
     "@vitejs/plugin-rsc": "0.5.26",
     "drizzle-kit": "0.31.10",
+    "electron": "^39.2.7",
     "eslint": "9.39.4",
     "eslint-config-next": "16.2.6",
     "react-server-dom-webpack": "19.2.6",

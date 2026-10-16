@@ -11,11 +11,11 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     metadataBase: base,
     title: "莉莉的衣橱冒险",
-    description: "50关2.5D推箱子换装游戏，支持键盘、滑动和手机方向键操作。",
-    icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
+    description: "2.5D推箱子换装游戏，支持键盘、滑动和手机方向键操作。",
+    icons: { icon: "/favicon.png", shortcut: "/favicon.png", apple: "/app-icon.png" },
     openGraph: {
       title: "莉莉的衣橱冒险",
-      description: "推动宝箱收集星光，每完成若干关卡解锁一套新裙子。",
+      description: "推动宝箱收集星光，探索莉莉的梦幻衣橱。",
       type: "website",
       locale: "zh_CN",
       images: ["/art-v3/start-screen-clean.png"],
@@ -23,7 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
     twitter: {
       card: "summary_large_image",
       title: "莉莉的衣橱冒险",
-      description: "50关2.5D推箱子换装游戏。",
+      description: "2.5D推箱子换装游戏。",
       images: ["/art-v3/start-screen-clean.png"],
     },
   };
