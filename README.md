@@ -29,28 +29,9 @@ npm run dev
 
 H5 部署需要上传整个 `dist-android/`，不能只上传 `index.html`。Windows 打包脚本使用 PowerShell 和 Electron，需要在 Windows 环境执行。
 
-### Android 构建前提
+### Android 构建
 
-仓库保留 Android 原生工程、隐私同意和 3839 实名认证 / 防沉迷桥接源码，**不包含渠道 SDK、发布密钥或本机工具链**。克隆后仅安装 npm 依赖并不足以构建当前渠道 APK。
-
-当前 Android 打包脚本面向 Windows，使用以下项目内目录：
-
-- `.toolchains/jdk-21.0.9-lite/`
-- `.toolchains/gradle-8.14.3/`
-- `.toolchains/android-sdk/`
-
-需从渠道官方授权来源取得 SDK，将对应 AAR 放到 `android/app/libs/`，详见该目录的说明。不要把 AAR 上传到公共仓库。
-
-正式发布必须恢复原有永久证书及独立保管的凭据，位置为 `正式发布资料/01-私密签名/`。也可通过 `LILY_RELEASE_KEYSTORE`、`LILY_RELEASE_KEYSTORE_PASSWORD`、`LILY_RELEASE_KEY_ALIAS`、`LILY_RELEASE_KEY_PASSWORD` 配置；不要将其值写入源码。缺少完整签名配置时，构建脚本只生成测试签名包，不能用于商店更新。
-
-当前正式手机候选包的 `versionCode` 为 **7**。下次手机正式构建必须显式设置更高的版本号，例如在 PowerShell 中：
-
-```powershell
-$env:LILY_ANDROID_VERSION_CODE = "8"
-npm run build:mobile
-```
-
-正式 APK 和 Windows ZIP 输出到 `正式发布资料/03-正式安装包/`；测试 APK 输出到 `releases/`。以上成品均不进入 Git。
+仓库保留 Android 原生工程、隐私同意和合规桥接源码；渠道 SDK、发布密钥与本机工具链不随仓库分发。正式 APK 与 Windows ZIP 输出到 `正式发布资料/03-正式安装包/`，测试包输出到 `releases/`，成品不进入 Git，最新安装包可在 GitHub Releases 页面下载。
 
 ## 源码与交接资料
 
